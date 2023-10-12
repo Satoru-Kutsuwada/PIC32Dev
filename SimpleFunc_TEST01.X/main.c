@@ -1,9 +1,4 @@
-//=============================================================================
-//
-//=============================================================================
-#include "usr_system.h"
-#include "xc.h"
-//#include <libpic30.h> 
+
 //=============================================================================
 //
 //=============================================================================
@@ -44,7 +39,11 @@
 #pragma config FUSBIDIO =   ON
 
 
-
+//=============================================================================
+//  include
+//=============================================================================
+#include "usr_system.h"
+#include "xc.h"
 
 //=============================================================================
 // define
@@ -55,11 +54,51 @@
 //=============================================================================
 // variable
 //=============================================================================
+extern uint16_t    timer1_cnt;
+
+
+
+#define    USR_RX_BUF_MAX  64
+#define    USR_TX_BUF_MAX  32
+#define    USR_TX_BUF_NUM  4
+
+
+#define    USR_RX_DATA      0x8000
+#define    USR_RX_ERROR     0x0001
+
+
+typedef struct {
+    uint16_t    wptr;
+    uint16_t    rptr;
+    uint16_t    status;
+    uint8_t     buf[USR_RX_BUF_MAX];
+}USR_UART_BUF;
+
+//USR_UART_BUF usrTx;
+USR_UART_BUF usrRx;
+
+typedef enum{
+    TX_BUF_AVAILABLE=0,
+    TX_BUF_NOT_AVAILABLE,
+    TX_BUF_REQUEST
+            
+}TX_BUF_STATUS;
+
+typedef struct {
+    TX_BUF_STATUS    status;
+    uint16_t    num;
+    uint16_t    ptr;
+    uint8_t     buf[USR_RX_BUF_MAX];
+}USR_UART_TX_BUF;
+
+USR_UART_TX_BUF usrTx;
+
 
 
 //=============================================================================
 // prototype
 //=============================================================================
+    void usrInitTimer1(void);
 
 //==============================================================================
 // Waite time = num x 10ms
@@ -81,21 +120,56 @@ void usrUART_Init(void)
 {
 const uint32_t usrBaundRate_BRG = ( (usrPERIPHERAL_CLOCK_HZ / usrBAUNRATE ) / 4 ) - 1;
 
+    usrRx.rptr = 0;
+    usrRx.wptr = 0;
+    usrRx.status = 0;
+
+    usrTx.num = 0;
+    usrTx.ptr = 0;
+    usrTx.status = 0;
+
+
+
+
+
+
     UART_MODE   = 0;
     UART_STA    = 0;
     
-    
+    // MODE REG
     UART_STSEL  = 0;    // STOP bit 1
     UART_PDSEL  = 0;    // 8-bit data, no parity
     UART_BRGH   = 1;
+    UART_RTSMD  = 1;
     
+    // Baund Rate
     UART_BRG    = usrBaundRate_BRG;
     
+    // RxPORT INPUT
     UART_RXPORT = 1;
     
+    // UART START
     UART_UTXEN  = 1;
     UART_URXEN  = 1;
     UART_ON     = 1;
+   
+    // INTERRUPT
+    //	Flag	
+    UART_EIF    = 0;
+    UART_RXIF   = 0;
+    UART_TXIF   = 0;
+
+    // Priority
+    UART_IP     = 7;
+    UART_IS     = 0;
+    	
+    //	Enable	
+    UART_EIE    = 0;
+    UART_RXIE   = 0;
+    UART_TXIE   = 0;
+
+    
+    
     
      Wait(0xffff);
 }
@@ -120,7 +194,27 @@ void putstring(uint8_t *string)
     }
 }
 
-
+void putstringISR(uint8_t *string)
+{
+    uint8_t lst_data = 0;
+    
+    while(usrTx.status != TX_BUF_AVAILABLE);
+    
+    usrTx.num = 0;
+    usrTx.ptr = 0;
+    while(*string != '\0'){
+        if( lst_data == 0 ){
+            lst_data = *string;
+        }
+        else{
+            usrTx.buf[usrTx.num] = *string; 
+            usrTx.num ++;
+            string++;
+        }
+    }
+    usrTx.status = TX_BUF_REQUEST;
+    putch(lst_data);
+}
 //==============================================================================
 //
 //==============================================================================
@@ -137,13 +231,27 @@ int getch(void)
         return (int) UART_RXREG; // 受信データを返す
     }        
 }
-
+int getReciveData(void)
+{
+    int ch = 0;
+    
+    if(usrRx.rptr != usrRx.wptr){
+        ch = usrRx.buf[usrRx.rptr];
+        usrRx.rptr ++;
+        
+        if( usrRx.rptr > USR_RX_BUF_MAX ){
+            usrRx.rptr = 0;
+        }
+    }
+    return ch;
+}
 //=============================================================================
 //
 //=============================================================================
 int main( void )
 {
     int ch;
+    uint16_t    temp;
     
     /* Wait for PLL to be locked */
     while(OSCCONbits.SLOCK == 0U)
@@ -169,24 +277,108 @@ int main( void )
     // UART
     //-----------------------------------------
     usrUART_Init();
-    putstring("********************\r\n");
-    putstring("***  USRT START  ***\r\n");
-    putstring("********************\r\n");
 
     //-----------------------------------------
-    // INTERRUPT
+    // TIMER1
     //-----------------------------------------
-    //INTCONbits.MVEC = 1;        // マルチベクタモード
+    usrInitTimer1();
+
+    // INTERRUPT
+    INTCONbits.MVEC   = 1;
+    asm volatile("ei");
     
+
+    putstring("********************\r\n");
+    putstring("***  USRT START  ***\r\n");
+    putstring("********************\r\n\r\n");
+    //putstringISR("@@@@@@@@@@@@@@@@@@@@\r\n");
+    //putstringISR("@@@  USRT START  @@@\r\n");
+    //putstringISR("@@@@@@@@@@@@@@@@@@@@\r\n");
+
+  
+    putstring("MAIN LOOP\r\n");
+
+
 	while(1){
         ch = getch();
         if( ch != 0 ){
             putch(ch);
         }
+        
+        if( temp != timer1_cnt ){
+            temp = timer1_cnt;
+            putstring("timer1_cnt count up\r\n");
+        }
+        
+        
+        
 	}
     
     
 	return 0;
 
+}
+
+
+//=============================================================================
+//    UARTReceiveInterrupt
+//=============================================================================
+#pragma vector UARTInterrupt 24
+#pragma interrupt UARTInterrupt IPL7AUTO
+void UARTInterrupt(void)
+{
+    uint16_t    i;
+    uint16_t    dtnum;
+    
+    // UART ERROR
+    if( UART_EIF ){
+        UART_EIF = 0;
+    }
+
+    // UART RX
+    if( UART_RXIF ){
+        UART_RXIF = 0;
+
+#ifdef ___NOP
+        
+        if( UART_URXDA ){
+            usrRx.buf[usrRx.wptr] = UART_RXREG;
+            usrRx.status |= USR_RX_DATA;
+            usrRx.wptr ++;
+            if( usrRx.wptr > USR_RX_BUF_MAX ){
+                usrRx.wptr = 0;
+            }
+            
+            if( usrRx.wptr == usrRx.rptr ){
+                usrRx.status |= USR_RX_ERROR;
+            }
+            
+        }
+#endif
+    }
+
+    // UART TX
+    if( UART_TXIF ){
+        UART_TXIF = 0;
+        
+#ifdef ___NOP
+        if(usrTx.status == TX_BUF_REQUEST){
+            for(i=usrTx.ptr; i<usrTx.num;i++){
+                if( UART_UTXBF ){
+                    break;
+                }
+                else{
+                    UART_TXREG = usrTx.buf[i];
+                    usrTx.ptr ++;
+        
+                }
+        
+            }
+        }
+        if(usrTx.ptr == usrTx.num){
+            usrTx.status = TX_BUF_AVAILABLE;
+        }
+#endif
+    }    
 }
 

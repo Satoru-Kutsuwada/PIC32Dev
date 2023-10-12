@@ -46,6 +46,7 @@ extern "C" {
 #define	UART_BRGH	U1MODEbits.BRGH
 #define	UART_PDSEL	U1MODEbits.PDSEL
 #define	UART_STSEL	U1MODEbits.STSEL
+#define	UART_RTSMD	U1MODEbits.RTSMD
 		
 #define	UART_STA	U1STA
 #define	UART_UTXEN	U1STAbits.UTXEN
@@ -66,15 +67,22 @@ extern "C" {
     
 		
 //	Flag	
-#define	USRT_EIF    IFS0bits.U1EIF
-#define	USRT_RXIF   IFS0bits.U1RXIF
-#define	USRT_TXIF   IFS0bits.U1TXIF
+#define	UART_EIF    IFS0bits.U1EIF
+#define	UART_RXIF   IFS0bits.U1RXIF
+#define	UART_TXIF   IFS0bits.U1TXIF
 		
 //	Enable	
-#define	USRT_EIE	IEC0bits.U1EIE
-#define	USRT_RXIE	IEC0bits.U1RXIE
-#define	USRT_TXIE	IEC0bits.U1TXIE
+#define	UART_EIE	IEC0bits.U1EIE
+#define	UART_RXIE	IEC0bits.U1RXIE
+#define	UART_TXIE	IEC0bits.U1TXIE
 
+// Priority
+#define	UART_IP     IPC6bits.U1IP
+#define	UART_IS     IPC6bits.U1IS
+
+// VECTOR
+#define UART_VECTOR 24
+    
 #endif
     
 //-----------------------------------------------------
@@ -85,7 +93,8 @@ extern "C" {
 #define	UART_BRGH	U2MODEbits.BRGH
 #define	UART_PDSEL	U2MODEbits.PDSEL
 #define	UART_STSEL	U2MODEbits.STSEL
-		
+#define	UART_RTSMD	U2MODEbits.RTSMD
+
 #define	UART_STA	U2STA
 #define	UART_UTXEN	U2STAbits.UTXEN
 #define	UART_URXEN	U2STAbits.URXEN
@@ -105,14 +114,22 @@ extern "C" {
     
 		
 //	Flag	
-#define	USRT_EIF    IFS1bits.U2EIF
-#define	USRT_RXIF   IFS1bits.U2RXIF
-#define	USRT_TXIF   IFS1bits.U2TXIF
+#define	UART_EIF    IFS1bits.U2EIF
+#define	UART_RXIF   IFS1bits.U2RXIF
+#define	UART_TXIF   IFS1bits.U2TXIF
 		
 //	Enable	
-#define	USRT_EIE	IEC1bits.U2EIE
-#define	USRT_RXIE	IEC1bits.U2RXIE
-#define	USRT_TXIE	IEC1bits.U2TXIE
+#define	UART_EIE	IEC1bits.U2EIE
+#define	UART_RXIE	IEC1bits.U2RXIE
+#define	UART_TXIE	IEC1bits.U2TXIE
+
+// Priority
+#define	UART_IP     IPC8bits.U2IP
+#define	UART_IS     IPC8bits.U2IS
+
+// VECTOR
+#define	UART_VECTOR     _UART_2_VECTOR 
+
 #endif
         
 //-----------------------------------------------------
@@ -123,6 +140,7 @@ extern "C" {
 #define	UART_BRGH	U3MODEbits.BRGH
 #define	UART_PDSEL	U3MODEbits.PDSEL
 #define	UART_STSEL	U3MODEbits.STSEL
+#define	UART_RTSMD	U3MODEbits.RTSMD
 		
 #define	UART_STA	U3STA
 #define	UART_UTXEN	U3STAbits.UTXEN
@@ -143,14 +161,22 @@ extern "C" {
     
 		
 //	Flag	
-#define	USRT_EIF    IFS1bits.U3EIF
-#define	USRT_RXIF   IFS1bits.U3RXIF
-#define	USRT_TXIF   IFS1bits.U3TXIF
+#define	UART_EIF    IFS1bits.U3EIF
+#define	UART_RXIF   IFS1bits.U3RXIF
+#define	UART_TXIF   IFS1bits.U3TXIF
 		
 //	Enable	
-#define	USRT_EIE	IEC1bits.U3EIE
-#define	USRT_RXIE	IEC1bits.U3RXIE
-#define	USRT_TXIE	IEC1bits.U3TXIE
+#define	UART_EIE	IEC1bits.U3EIE
+#define	UART_RXIE	IEC1bits.U3RXIE
+#define	UART_TXIE	IEC1bits.U3TXIE
+
+// Priority
+#define	UART_IP     IPC7bits.U3IP
+#define	UART_IS     IPC7bits.U3IS
+
+// VECTOR
+
+
 #endif
         
 //-----------------------------------------------------
@@ -167,6 +193,7 @@ extern "C" {
 #define	UART_BRGH	U5MODEbits.BRGH
 #define	UART_PDSEL	U5MODEbits.PDSEL
 #define	UART_STSEL	U5MODEbits.STSEL
+#define	UART_RTSMD	U5MODEbits.RTSMD
 		
 #define	UART_STA	U5STA
 #define	UART_UTXEN	U5STAbits.UTXEN
@@ -186,15 +213,22 @@ extern "C" {
 #define	UART_RXPORT	TRISBbits.TRISB8
     
 //	Flag	
-#define	USRT_EIF    IFS2bits.U5EIF
-#define	USRT_RXIF   IFS2bits.U5RXIF
-#define	USRT_TXIF   IFS2bits.U5TXIF
+#define	UART_EIF    IFS2bits.U5EIF
+#define	UART_RXIF   IFS2bits.U5RXIF
+#define	UART_TXIF   IFS2bits.U5TXIF
 		
 //	Enable	
-#define	USRT_EIE	IEC2bits.U5EIE
-#define	USRT_RXIE	IEC2bits.U5RXIE
-#define	USRT_TXIE	IEC2bits.U5TXIE
-    
+#define	UART_EIE	IEC2bits.U5EIE
+#define	UART_RXIE	IEC2bits.U5RXIE
+#define	UART_TXIE	IEC2bits.U5TXIE
+
+// Priority
+#define	UART_IP     IPC12bits.U5IP
+#define	UART_IS     IPC12bits.U5IS
+
+
+// VECTOR
+  
     
 #endif
         
@@ -206,6 +240,7 @@ extern "C" {
 #define	UART_BRGH	U6MODEbits.BRGH
 #define	UART_PDSEL	U6MODEbits.PDSEL
 #define	UART_STSEL	U6MODEbits.STSEL
+#define	UART_RTSMD	U6MODEbits.RTSMD
 		
 #define	UART_STA	U6STA
 #define	UART_UTXEN	U6STAbits.UTXEN
@@ -226,14 +261,21 @@ extern "C" {
     
 		
 //	Flag	
-#define	USRT_EIF    IFS2bits.U6EIF
-#define	USRT_RXIF   IFS2bits.U6RXIF
-#define	USRT_TXIF   IFS2bits.U6TXIF
+#define	UART_EIF    IFS2bits.U6EIF
+#define	UART_RXIF   IFS2bits.U6RXIF
+#define	UART_TXIF   IFS2bits.U6TXIF
 		
 //	Enable	
-#define	USRT_EIE	IEC2bits.U6EIE
-#define	USRT_RXIE	IEC2bits.U6RXIE
-#define	USRT_TXIE	IEC2bits.U6TXIE
+#define	UART_EIE	IEC2bits.U6EIE
+#define	UART_RXIE	IEC2bits.U6RXIE
+#define	UART_TXIE	IEC2bits.U6TXIE
+
+// Priority
+#define	UART_IP     IPC12bits.U6IP
+#define	UART_IS     IPC12bits.U6IS
+
+// VECTOR
+
 #endif
         
         
