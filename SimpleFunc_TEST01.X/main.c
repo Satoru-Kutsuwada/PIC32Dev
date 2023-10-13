@@ -52,12 +52,17 @@
 
 
 //=============================================================================
-// variable
+// external variable
 //=============================================================================
 extern uint16_t    timer1_cnt;
+extern uint16_t    usrRTCcnt;
+extern USR_RTC_DATA usrRTC;
+extern USR_RTC_DATA usrSRTC;
 
 
-
+//=============================================================================
+// variable
+//=============================================================================
 #define    USR_RX_BUF_MAX  64
 #define    USR_TX_BUF_MAX  32
 #define    USR_TX_BUF_NUM  4
@@ -98,7 +103,10 @@ USR_UART_TX_BUF usrTx;
 //=============================================================================
 // prototype
 //=============================================================================
-    void usrInitTimer1(void);
+void usrInitTimer1(void);
+void usrInitRTC(void);
+void Xprintf(const char *string, ...);
+void usrGetRTC(void);
 
 //==============================================================================
 // Waite time = num x 10ms
@@ -282,7 +290,13 @@ int main( void )
     // TIMER1
     //-----------------------------------------
     usrInitTimer1();
-
+    
+    
+    //-----------------------------------------
+    // RTC
+    //-----------------------------------------
+    // usrInitRTC();
+    
     // INTERRUPT
     INTCONbits.MVEC   = 1;
     asm volatile("ei");
@@ -291,26 +305,37 @@ int main( void )
     putstring("********************\r\n");
     putstring("***  USRT START  ***\r\n");
     putstring("********************\r\n\r\n");
-    //putstringISR("@@@@@@@@@@@@@@@@@@@@\r\n");
-    //putstringISR("@@@  USRT START  @@@\r\n");
-    //putstringISR("@@@@@@@@@@@@@@@@@@@@\r\n");
-
   
     putstring("MAIN LOOP\r\n");
 
 
 	while(1){
+        Xprintf(" %d:%d:%d %d.%d\r\n",
+                usrSRTC.hour, usrSRTC.min,   usrSRTC.sec,
+                usrSRTC.msec, usrSRTC.usec );
+        
         ch = getch();
         if( ch != 0 ){
             putch(ch);
         }
-        
+#ifdef ___NOP 
         if( temp != timer1_cnt ){
             temp = timer1_cnt;
             putstring("timer1_cnt count up\r\n");
         }
-        
-        
+#endif
+        if( temp != usrRTCcnt ){
+            temp = usrRTCcnt;
+            Xprintf("usrRTCcnt=%d  ",temp);
+            usrGetRTC();
+            Xprintf("%d/%d/%d %d:%d:%d",
+                usrRTC.year, usrRTC.month, usrRTC.day,
+                usrRTC.hour, usrRTC.min,   usrRTC.sec );
+
+            Xprintf(" %d:%d:%d %d.%d\r\n",
+                usrSRTC.hour, usrSRTC.min,   usrSRTC.sec,
+                usrSRTC.msec, usrSRTC.usec );
+        }
         
 	}
     

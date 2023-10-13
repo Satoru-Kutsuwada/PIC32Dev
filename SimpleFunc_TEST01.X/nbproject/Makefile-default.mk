@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=main.c usr_timer.c
+SOURCEFILES_QUOTED_IF_SPACED=main.c usr_timer.c usr_tools.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/main.o ${OBJECTDIR}/usr_timer.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/main.o.d ${OBJECTDIR}/usr_timer.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/main.o ${OBJECTDIR}/usr_timer.o ${OBJECTDIR}/usr_tools.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/main.o.d ${OBJECTDIR}/usr_timer.o.d ${OBJECTDIR}/usr_tools.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/main.o ${OBJECTDIR}/usr_timer.o
+OBJECTFILES=${OBJECTDIR}/main.o ${OBJECTDIR}/usr_timer.o ${OBJECTDIR}/usr_tools.o
 
 # Source Files
-SOURCEFILES=main.c usr_timer.c
+SOURCEFILES=main.c usr_timer.c usr_tools.c
 
 
 
@@ -113,6 +113,12 @@ ${OBJECTDIR}/usr_timer.o: usr_timer.c  .generated_files/flags/default/eff98bab67
 	@${RM} ${OBJECTDIR}/usr_timer.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/usr_timer.o.d" -o ${OBJECTDIR}/usr_timer.o usr_timer.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
+${OBJECTDIR}/usr_tools.o: usr_tools.c  .generated_files/flags/default/5f0bf18272743ff536cf2da5c945088ba172bec1 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/usr_tools.o.d 
+	@${RM} ${OBJECTDIR}/usr_tools.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/usr_tools.o.d" -o ${OBJECTDIR}/usr_tools.o usr_tools.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
 else
 ${OBJECTDIR}/main.o: main.c  .generated_files/flags/default/ca15c46867405dce31d6093512b2020ec85cd82a .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
@@ -125,6 +131,12 @@ ${OBJECTDIR}/usr_timer.o: usr_timer.c  .generated_files/flags/default/b1b3f46137
 	@${RM} ${OBJECTDIR}/usr_timer.o.d 
 	@${RM} ${OBJECTDIR}/usr_timer.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/usr_timer.o.d" -o ${OBJECTDIR}/usr_timer.o usr_timer.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/usr_tools.o: usr_tools.c  .generated_files/flags/default/f465eed735f8627a5a4c566e8ed390e7bfe076a .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/usr_tools.o.d 
+	@${RM} ${OBJECTDIR}/usr_tools.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/usr_tools.o.d" -o ${OBJECTDIR}/usr_tools.o usr_tools.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
 endif
 
