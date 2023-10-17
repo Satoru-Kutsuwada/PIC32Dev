@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/D:/PIC32/PIC32Dev/FreeRTOS01.X/Source/vl53/inc/vl53l0x_device.h</file>
+            <file>file:/D:/PIC32/PIC32Dev/FreeRTOS01.X/Source/vl53/inc/vl53l0x_def.h</file>
+            <file>file:/D:/PIC32/PIC32Dev/FreeRTOS01.X/Source/vl53/inc/vl53l0x_types.h</file>
+            <file>file:/D:/PIC32/PIC32Dev/FreeRTOS01.X/Source/vl53/inc/vl53l0x_platform.h</file>
+            <file>file:/D:/PIC32/PIC32Dev/FreeRTOS01.X/Source/vl53/vl53l0x_platform.c</file>
+            <file>file:/D:/PIC32/PIC32Dev/FreeRTOS01.X/Source/usr_tools.c</file>
+            <file>file:/D:/PIC32/PIC32Dev/FreeRTOS01.X/Source/vl53/vl53l0x_api_strings.c</file>
+            <file>file:/D:/PIC32/PIC32Dev/FreeRTOS01.X/Source/vl53/vl53l0x_api_core.c</file>
+            <file>file:/D:/PIC32/PIC32Dev/FreeRTOS01.X/Source/vl53/vl53l0x_api_calibration.c</file>
+            <file>file:/D:/PIC32/PIC32Dev/FreeRTOS01.X/Source/vl53/vl53l0x_api.c</file>
+        </group>
+    </open-files>
+</project-private>
