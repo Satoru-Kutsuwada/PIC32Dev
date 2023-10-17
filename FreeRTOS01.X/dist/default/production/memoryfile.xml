@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <project>                                  
-  <executable name="dist/default/production/SimpleFunc_TEST01.X.production.elf">                 
+  <executable name="dist/default/production/FreeRTOS01.X.production.elf">                 
     <memory name="program">                 
       <units>bytes</units>                 
       <length>73216</length>                 
-      <used>12028</used>                     
-      <free>61188</free>                     
+      <used>45552</used>                     
+      <free>27664</free>                     
     </memory>                              
     <memory name="data">              
       <units>bytes</units>                 
       <length>16384</length>                 
-      <used>304</used>                     
-      <free>16080</free>                     
+      <used>11288</used>                     
+      <free>5096</free>                     
     </memory>                              
   </executable>                            
 </project>                                 

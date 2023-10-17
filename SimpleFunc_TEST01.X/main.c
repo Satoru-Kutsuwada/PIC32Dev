@@ -56,6 +56,7 @@
 //=============================================================================
 extern uint16_t    timer1_cnt;
 extern uint16_t    usrRTCcnt;
+extern uint16_t    usrRTCflg;
 extern USR_RTC_DATA usrRTC;
 extern USR_RTC_DATA usrSRTC;
 
@@ -104,6 +105,7 @@ USR_UART_TX_BUF usrTx;
 // prototype
 //=============================================================================
 void usrInitTimer1(void);
+void usrInitTimer2(void);
 void usrInitRTC(void);
 void Xprintf(const char *string, ...);
 void usrGetRTC(void);
@@ -287,15 +289,16 @@ int main( void )
     usrUART_Init();
 
     //-----------------------------------------
-    // TIMER1
+    // TIMER
     //-----------------------------------------
-    usrInitTimer1();
+//    usrInitTimer1();
+    usrInitTimer2();
     
     
     //-----------------------------------------
     // RTC
     //-----------------------------------------
-    // usrInitRTC();
+     usrInitRTC();
     
     // INTERRUPT
     INTCONbits.MVEC   = 1;
@@ -310,9 +313,9 @@ int main( void )
 
 
 	while(1){
-        Xprintf(" %d:%d:%d %d.%d\r\n",
-                usrSRTC.hour, usrSRTC.min,   usrSRTC.sec,
-                usrSRTC.msec, usrSRTC.usec );
+        //Xprintf(" %d:%d:%d %d.%d\r\n",
+         //       usrSRTC.hour, usrSRTC.min,   usrSRTC.sec,
+         //       usrSRTC.msec, usrSRTC.usec );
         
         ch = getch();
         if( ch != 0 ){
@@ -324,7 +327,9 @@ int main( void )
             putstring("timer1_cnt count up\r\n");
         }
 #endif
-        if( temp != usrRTCcnt ){
+        if( usrRTCflg == 1){
+            usrRTCflg = 0;
+   
             temp = usrRTCcnt;
             Xprintf("usrRTCcnt=%d  ",temp);
             usrGetRTC();
