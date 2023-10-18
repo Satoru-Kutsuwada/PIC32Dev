@@ -335,7 +335,7 @@ VL53L0X_Error VL53L0X_RdWord(VL53L0X_DEV Dev, uint8_t index, uint16_t *data) {
 	uint8_t  buffer[BYTES_PER_WORD];
 
     status_int =  i2c_readMulti( Dev->I2cDevAddr, index, buffer, BYTES_PER_WORD);
-	*pdata = ((uint16_t)buffer[0]<<8) + (uint16_t)buffer[1];
+	*data = ((uint16_t)buffer[0]<<8) + (uint16_t)buffer[1];
     
     if (status_int == 0){
         Status = VL53L0X_ERROR_NONE;
