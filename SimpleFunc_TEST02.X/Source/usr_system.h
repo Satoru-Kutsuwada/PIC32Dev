@@ -43,6 +43,219 @@ typedef struct {
 
     
 //=============================================================================
+// I2C Define
+//=============================================================================
+//#define I2C1_AVALABLE
+//#define I2C3_AVALABLE
+//#define I2C4_AVALABLE
+#define I2C5_AVALABLE
+
+//-----------------------------------------------------
+#ifdef I2C1_AVALABLE
+
+#define     I2C_CON         I2C1CON
+#define     I2C_SEN         I2C1CONbits.SEN
+#define     I2C_RSEN        I2C1CONbits.RSEN
+#define     I2C_PEN         I2C1CONbits.PEN
+#define     I2C_RCEN        I2C1CONbits.RCEN
+#define     I2C_ACKEN       I2C1CONbits.ACKEN
+#define     I2C_ACKDT       I2C1CONbits.ACKDT
+#define     I2C_STREN       I2C1CONbits.STREN
+#define     I2C_GCEN        I2C1CONbits.GCEN
+#define     I2C_DISSLW      I2C1CONbits.DISSLW
+#define     I2C_A10M        I2C1CONbits.A10M
+#define     I2C_ON          I2C1CONbits.ON
+#define     I2C_SCIE        I2C1CONbits.SCIE
+#define     I2C_PCIE        I2C1CONbits.PCIE
+
+#define     I2C_STAT        I2C1STAT
+#define     I2C_TBF         I2C1STATbits.TBF
+#define     I2C_RBF         I2C1STATbits.RBF
+#define     I2C_R_W         I2C1STATbits.R_W
+#define     I2C_S           I2C1STATbits.S
+#define     I2C_P           I2C1STATbits.P
+#define     I2C_D_A         I2C1STATbits.D_A
+#define     I2C_I2COV       I2C1STATbits.I2COV
+#define     I2C_IWCOL       I2C1STATbits.IWCOL
+#define     I2C_ADD10       I2C1STATbits.ADD10
+#define     I2C_GCSTAT      I2C1STATbits.GCSTAT
+#define     I2C_BCL         I2C1STATbits.BCL
+#define     I2C_TRSTAT      I2C1STATbits.TRSTAT
+#define     I2C_ACKSTAT     I2C1STATbits.ACKSTAT
+
+#define     I2C_ADD         I2C1ADD
+#define     I2C_MSK         I2C1MSK
+#define     I2C_BRG         I2C1BRG
+#define     I2C_TRN         I2C1TRN
+#define     I2C_RCV         I2C1RCV
+
+// Port
+#define     I2C_SCL         TRISBbits.
+#define     I2C_SDA         TRISAbits.TRISA15
+
+// Interrupt
+#define     I2C_ICIP        IPC1bits.IC1IP
+#define     I2C_ICIS        IPC1bits.IC1IS
+#define     I2C_ICIF        IFS0bits.IC1IF
+#define     I2C_ICIE        IEC0bits.IC1IE
+        
+#endif
+
+//-----------------------------------------------------
+#ifdef I2C3_AVALABLE
+
+#define     I2C_CON         I2C3CON
+#define     I2C_SEN         I2C3CONbits.SEN
+#define     I2C_RSEN        I2C3CONbits.RSEN
+#define     I2C_PEN         I2C3CONbits.PEN
+#define     I2C_RCEN        I2C3CONbits.RCEN
+#define     I2C_ACKEN       I2C3CONbits.ACKEN
+#define     I2C_ACKDT       I2C3CONbits.ACKDT
+#define     I2C_STREN       I2C3CONbits.STREN
+#define     I2C_GCEN        I2C3CONbits.GCEN
+#define     I2C_DISSLW      I2C3CONbits.DISSLW
+#define     I2C_A10M        I2C3CONbits.A10M
+#define     I2C_ON          I2C3CONbits.ON
+#define     I2C_SCIE        I2C3CONbits.SCIE
+#define     I2C_PCIE        I2C3CONbits.PCIE
+
+#define     I2C_STAT        I2C3STAT
+#define     I2C_TBF         I2C3STATbits.TBF
+#define     I2C_RBF         I2C3STATbits.RBF
+#define     I2C_R_W         I2C3STATbits.R_W
+#define     I2C_S           I2C3STATbits.S
+#define     I2C_P           I2C3STATbits.P
+#define     I2C_D_A         I2C3STATbits.D_A
+#define     I2C_I2COV       I2C3STATbits.I2COV
+#define     I2C_IWCOL       I2C3STATbits.IWCOL
+#define     I2C_ADD10       I2C3STATbits.ADD10
+#define     I2C_GCSTAT      I2C3STATbits.GCSTAT
+#define     I2C_BCL         I2C3STATbits.BCL
+#define     I2C_TRSTAT      I2C3STATbits.TRSTAT
+#define     I2C_ACKSTAT     I2C3STATbits.ACKSTAT
+
+#define     I2C_ADD         I2C3ADD
+#define     I2C_MSK         I2C3MSK
+#define     I2C_BRG         I2C3BRG
+#define     I2C_TRN         I2C3TRN
+#define     I2C_RCV         I2C3RCV
+
+// Port
+#define     I2C_SCL         TRISFbits.TRISF8
+#define     I2C_SDA         TRISFbits.TRISF2
+
+// Interrupt
+#define     I2C_ICIP        IPC3bits.IC3IP
+#define     I2C_ICIS        IPC3bits.IC3IS
+#define     I2C_ICIF        IFS0bits.IC3IF
+#define     I2C_ICIE        IEC0bits.IC3IE
+
+#endif
+
+//-----------------------------------------------------
+#ifdef I2C4_AVALABLE
+
+#define     I2C_CON         I2C4CON
+#define     I2C_SEN         I2C4CONbits.SEN
+#define     I2C_RSEN        I2C4CONbits.RSEN
+#define     I2C_PEN         I2C4CONbits.PEN
+#define     I2C_RCEN        I2C4CONbits.RCEN
+#define     I2C_ACKEN       I2C4CONbits.ACKEN
+#define     I2C_ACKDT       I2C4CONbits.ACKDT
+#define     I2C_STREN       I2C4CONbits.STREN
+#define     I2C_GCEN        I2C4CONbits.GCEN
+#define     I2C_DISSLW      I2C4CONbits.DISSLW
+#define     I2C_A10M        I2C4CONbits.A10M
+#define     I2C_ON          I2C4CONbits.ON
+#define     I2C_SCIE        I2C4CONbits.SCIE
+#define     I2C_PCIE        I2C4CONbits.PCIE
+
+#define     I2C_STAT        I2C4STAT
+#define     I2C_TBF         I2C4STATbits.TBF
+#define     I2C_RBF         I2C4STATbits.RBF
+#define     I2C_R_W         I2C4STATbits.R_W
+#define     I2C_S           I2C4STATbits.S
+#define     I2C_P           I2C4STATbits.P
+#define     I2C_D_A         I2C4STATbits.D_A
+#define     I2C_I2COV       I2C4STATbits.I2COV
+#define     I2C_IWCOL       I2C4STATbits.IWCOL
+#define     I2C_ADD10       I2C4STATbits.ADD10
+#define     I2C_GCSTAT      I2C4STATbits.GCSTAT
+#define     I2C_BCL         I2C4STATbits.BCL
+#define     I2C_TRSTAT      I2C4STATbits.TRSTAT
+#define     I2C_ACKSTAT     I2C4STATbits.ACKSTAT
+
+#define     I2C_ADD         I2C4ADD
+#define     I2C_MSK         I2C4MSK
+#define     I2C_BRG         I2C4BRG
+#define     I2C_TRN         I2C4TRN
+#define     I2C_RCV         I2C4RCV
+
+// Port
+#define     I2C_SCL         TRISGbits.TRISG8
+#define     I2C_SDA         TRISGbits.TRISG7
+
+// Interrupt
+#define     I2C_ICIP        IPC4bits.IC4IP
+#define     I2C_ICIS        IPC4bits.IC4IS
+#define     I2C_ICIF        IFS0bits.IC4IF
+#define     I2C_ICIE        IEC0bits.IC4IE
+
+#endif
+
+//-----------------------------------------------------
+#ifdef I2C5_AVALABLE
+
+#define     I2C_CON         I2C5CON
+#define     I2C_SEN         I2C5CONbits.SEN
+#define     I2C_RSEN        I2C5CONbits.RSEN
+#define     I2C_PEN         I2C5CONbits.PEN
+#define     I2C_RCEN        I2C5CONbits.RCEN
+#define     I2C_ACKEN       I2C5CONbits.ACKEN
+#define     I2C_ACKDT       I2C5CONbits.ACKDT
+#define     I2C_STREN       I2C5CONbits.STREN
+#define     I2C_GCEN        I2C5CONbits.GCEN
+#define     I2C_DISSLW      I2C5CONbits.DISSLW
+#define     I2C_A10M        I2C5CONbits.A10M
+#define     I2C_ON          I2C5CONbits.ON
+#define     I2C_SCIE        I2C5CONbits.SCIE
+#define     I2C_PCIE        I2C5CONbits.PCIE
+
+#define     I2C_STAT        I2C5STAT
+#define     I2C_TBF         I2C5STATbits.TBF
+#define     I2C_RBF         I2C5STATbits.RBF
+#define     I2C_R_W         I2C5STATbits.R_W
+#define     I2C_S           I2C5STATbits.S
+#define     I2C_P           I2C5STATbits.P
+#define     I2C_D_A         I2C5STATbits.D_A
+#define     I2C_I2COV       I2C5STATbits.I2COV
+#define     I2C_IWCOL       I2C5STATbits.IWCOL
+#define     I2C_ADD10       I2C5STATbits.ADD10
+#define     I2C_GCSTAT      I2C5STATbits.GCSTAT
+#define     I2C_BCL         I2C5STATbits.BCL
+#define     I2C_TRSTAT      I2C5STATbits.TRSTAT
+#define     I2C_ACKSTAT     I2C5STATbits.ACKSTAT
+
+#define     I2C_ADD         I2C5ADD
+#define     I2C_MSK         I2C5MSK
+#define     I2C_BRG         I2C5BRG
+#define     I2C_TRN         I2C5TRN
+#define     I2C_RCV         I2C5RCV
+
+// Port
+#define     I2C_SCL         TRISFbits.TRISF5
+#define     I2C_SDA         TRISFbits.TRISF4
+
+// Interrupt
+#define     I2C_ICIP        IPC5bits.IC5IP
+#define     I2C_ICIS        IPC5bits.IC5IS
+#define     I2C_ICIF        IFS0bits.IC5IF
+#define     I2C_ICIE        IEC0bits.IC5IE
+
+#endif
+
+
+//=============================================================================
 // UART Define
 //=============================================================================
 #define UART1_AVALABLE
@@ -511,7 +724,9 @@ typedef struct{
 /* Public variables ----------------------------------------------------------*/
 
 typedef enum{
-    RASING_MODE_SINGLE,
+    RASING_MODE_NON = 0,
+
+    RASING_MODE_SINGLE ,
     RASING_MODE_SINGLE_HA,
     RASING_MODE_SINGLE_HS,
     RASING_MODE_SINGLE_LR,

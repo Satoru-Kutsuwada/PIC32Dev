@@ -69,8 +69,10 @@
 void usrUART_Init(void);
 void putstring(uint8_t *string);
 void Xprintf(const char *string, ...);
-
-
+void usr_main(void);
+void vl53_main(void);
+void usrInitTimer1(void);
+void Init_Timer(void);
 //=============================================================================
 //  main
 //=============================================================================
@@ -87,11 +89,19 @@ int main( void )
     putstring("***  USRT START  ***\r\n");
     putstring("********************\r\n\r\n");
 
+    //-----------------------------------------
+    // TIMER
+    //-----------------------------------------
+    Init_Timer();
+
+    usrInitTimer1();
     
 
     
     while(1){
+        usr_main();
         
+        vl53_main();
     }
     
 

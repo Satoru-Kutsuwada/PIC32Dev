@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=Source/main.c Source/usr_tools.c Source/vl53/usr_i2cMain.c Source/vl53/vl53l0x_api.c Source/vl53/vl53l0x_api_calibration.c Source/vl53/vl53l0x_api_core.c Source/vl53/vl53l0x_api_strings.c Source/vl53/vl53l0x_platform.c Source/vl53/usr_vl53_main.c
+SOURCEFILES_QUOTED_IF_SPACED=Source/main.c Source/usr_tools.c Source/vl53/usr_i2cMain.c Source/vl53/vl53l0x_api.c Source/vl53/vl53l0x_api_calibration.c Source/vl53/vl53l0x_api_core.c Source/vl53/vl53l0x_api_strings.c Source/vl53/vl53l0x_platform.c Source/vl53/usr_vl53_main.c usr_timer.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/Source/main.o ${OBJECTDIR}/Source/usr_tools.o ${OBJECTDIR}/Source/vl53/usr_i2cMain.o ${OBJECTDIR}/Source/vl53/vl53l0x_api.o ${OBJECTDIR}/Source/vl53/vl53l0x_api_calibration.o ${OBJECTDIR}/Source/vl53/vl53l0x_api_core.o ${OBJECTDIR}/Source/vl53/vl53l0x_api_strings.o ${OBJECTDIR}/Source/vl53/vl53l0x_platform.o ${OBJECTDIR}/Source/vl53/usr_vl53_main.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/Source/main.o.d ${OBJECTDIR}/Source/usr_tools.o.d ${OBJECTDIR}/Source/vl53/usr_i2cMain.o.d ${OBJECTDIR}/Source/vl53/vl53l0x_api.o.d ${OBJECTDIR}/Source/vl53/vl53l0x_api_calibration.o.d ${OBJECTDIR}/Source/vl53/vl53l0x_api_core.o.d ${OBJECTDIR}/Source/vl53/vl53l0x_api_strings.o.d ${OBJECTDIR}/Source/vl53/vl53l0x_platform.o.d ${OBJECTDIR}/Source/vl53/usr_vl53_main.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/Source/main.o ${OBJECTDIR}/Source/usr_tools.o ${OBJECTDIR}/Source/vl53/usr_i2cMain.o ${OBJECTDIR}/Source/vl53/vl53l0x_api.o ${OBJECTDIR}/Source/vl53/vl53l0x_api_calibration.o ${OBJECTDIR}/Source/vl53/vl53l0x_api_core.o ${OBJECTDIR}/Source/vl53/vl53l0x_api_strings.o ${OBJECTDIR}/Source/vl53/vl53l0x_platform.o ${OBJECTDIR}/Source/vl53/usr_vl53_main.o ${OBJECTDIR}/usr_timer.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/Source/main.o.d ${OBJECTDIR}/Source/usr_tools.o.d ${OBJECTDIR}/Source/vl53/usr_i2cMain.o.d ${OBJECTDIR}/Source/vl53/vl53l0x_api.o.d ${OBJECTDIR}/Source/vl53/vl53l0x_api_calibration.o.d ${OBJECTDIR}/Source/vl53/vl53l0x_api_core.o.d ${OBJECTDIR}/Source/vl53/vl53l0x_api_strings.o.d ${OBJECTDIR}/Source/vl53/vl53l0x_platform.o.d ${OBJECTDIR}/Source/vl53/usr_vl53_main.o.d ${OBJECTDIR}/usr_timer.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/Source/main.o ${OBJECTDIR}/Source/usr_tools.o ${OBJECTDIR}/Source/vl53/usr_i2cMain.o ${OBJECTDIR}/Source/vl53/vl53l0x_api.o ${OBJECTDIR}/Source/vl53/vl53l0x_api_calibration.o ${OBJECTDIR}/Source/vl53/vl53l0x_api_core.o ${OBJECTDIR}/Source/vl53/vl53l0x_api_strings.o ${OBJECTDIR}/Source/vl53/vl53l0x_platform.o ${OBJECTDIR}/Source/vl53/usr_vl53_main.o
+OBJECTFILES=${OBJECTDIR}/Source/main.o ${OBJECTDIR}/Source/usr_tools.o ${OBJECTDIR}/Source/vl53/usr_i2cMain.o ${OBJECTDIR}/Source/vl53/vl53l0x_api.o ${OBJECTDIR}/Source/vl53/vl53l0x_api_calibration.o ${OBJECTDIR}/Source/vl53/vl53l0x_api_core.o ${OBJECTDIR}/Source/vl53/vl53l0x_api_strings.o ${OBJECTDIR}/Source/vl53/vl53l0x_platform.o ${OBJECTDIR}/Source/vl53/usr_vl53_main.o ${OBJECTDIR}/usr_timer.o
 
 # Source Files
-SOURCEFILES=Source/main.c Source/usr_tools.c Source/vl53/usr_i2cMain.c Source/vl53/vl53l0x_api.c Source/vl53/vl53l0x_api_calibration.c Source/vl53/vl53l0x_api_core.c Source/vl53/vl53l0x_api_strings.c Source/vl53/vl53l0x_platform.c Source/vl53/usr_vl53_main.c
+SOURCEFILES=Source/main.c Source/usr_tools.c Source/vl53/usr_i2cMain.c Source/vl53/vl53l0x_api.c Source/vl53/vl53l0x_api_calibration.c Source/vl53/vl53l0x_api_core.c Source/vl53/vl53l0x_api_strings.c Source/vl53/vl53l0x_platform.c Source/vl53/usr_vl53_main.c usr_timer.c
 
 
 
@@ -155,6 +155,12 @@ ${OBJECTDIR}/Source/vl53/usr_vl53_main.o: Source/vl53/usr_vl53_main.c  .generate
 	@${RM} ${OBJECTDIR}/Source/vl53/usr_vl53_main.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/vl53/inc" -MP -MMD -MF "${OBJECTDIR}/Source/vl53/usr_vl53_main.o.d" -o ${OBJECTDIR}/Source/vl53/usr_vl53_main.o Source/vl53/usr_vl53_main.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
+${OBJECTDIR}/usr_timer.o: usr_timer.c  .generated_files/flags/default/5adc631f71e0376248a04c8644c645c0d6eb58b4 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/usr_timer.o.d 
+	@${RM} ${OBJECTDIR}/usr_timer.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/vl53/inc" -MP -MMD -MF "${OBJECTDIR}/usr_timer.o.d" -o ${OBJECTDIR}/usr_timer.o usr_timer.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
 else
 ${OBJECTDIR}/Source/main.o: Source/main.c  .generated_files/flags/default/3548bc21ba116378e19610a4e9bb39b4754ba5c .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/Source" 
@@ -209,6 +215,12 @@ ${OBJECTDIR}/Source/vl53/usr_vl53_main.o: Source/vl53/usr_vl53_main.c  .generate
 	@${RM} ${OBJECTDIR}/Source/vl53/usr_vl53_main.o.d 
 	@${RM} ${OBJECTDIR}/Source/vl53/usr_vl53_main.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/vl53/inc" -MP -MMD -MF "${OBJECTDIR}/Source/vl53/usr_vl53_main.o.d" -o ${OBJECTDIR}/Source/vl53/usr_vl53_main.o Source/vl53/usr_vl53_main.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/usr_timer.o: usr_timer.c  .generated_files/flags/default/3cb4cd6ad6b63515f4d51d988952072caa21f78 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/usr_timer.o.d 
+	@${RM} ${OBJECTDIR}/usr_timer.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/vl53/inc" -MP -MMD -MF "${OBJECTDIR}/usr_timer.o.d" -o ${OBJECTDIR}/usr_timer.o usr_timer.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
 endif
 

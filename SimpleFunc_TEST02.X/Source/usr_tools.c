@@ -1,16 +1,38 @@
 
+//==============================================================================
+// include
+//==============================================================================
 #include <xc.h>	
 
 #include <stdio.h>
 #include <stdarg.h>
 #include "usr_system.h"
 
+//==============================================================================
+// define
+//==============================================================================
+
+//==============================================================================
+// prototypes
+//==============================================================================
 
 void putch(unsigned char c);
-
 void putstring(uint8_t *string);
 
+//==============================================================================
+// Variable
+//==============================================================================
 const char ConvC[]= { '0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f' };
+
+
+//==============================================================================
+// Extern Variable
+//==============================================================================
+extern  RASING_MODE     usrRasingMode;
+
+
+
+
 
 
 
@@ -423,3 +445,139 @@ void Yprintf( uint8_t *string, uint32_t dt )
     }
 }
 
+
+//=====================================
+// タイマー
+//=====================================
+#define SKTIMER_NUM 3
+
+typedef enum{
+    ST_TIMER_IDLE,
+    ST_TIMER_USING
+}ST_TIMER;
+
+typedef struct{
+    uint8_t flg;
+    uint16_t cnt;
+}SK_TIMER_DATA;
+
+SK_TIMER_DATA SKtimer_data[SKTIMER_NUM];
+
+//==============================================================================
+//
+//==============================================================================
+uint16_t Get_Timer(int sel)
+{
+    uint16_t rtn = 0xffff;
+    
+   if(sel <  SKTIMER_NUM){
+       if( SKtimer_data[sel].flg == ST_TIMER_USING){
+            rtn = SKtimer_data[sel].cnt;
+       }
+   }
+    
+    if(rtn==0)
+    {
+#ifdef ___NOP
+        printf("Get_Timer(index=%d) flg=%d,rtn=%d\r\n",sel,SKtimer_data[sel].flg,rtn);
+        SetLogData( LOG_DISP_GET_TM, "Get_Timer()",(uint8_t)sel,SKtimer_data[sel].flg,0,0);
+#endif
+    }
+    return rtn;
+}
+
+//==============================================================================
+//
+//==============================================================================
+int Set_Timer(uint16_t dt)
+{
+    uint8_t i;
+    int  rtn;
+    
+    rtn = -1;
+    for( i = 0; i < SKTIMER_NUM; i++ ){
+        if( SKtimer_data[i].flg == ST_TIMER_IDLE){
+            SKtimer_data[i].flg = ST_TIMER_USING;
+            SKtimer_data[i].cnt = dt;
+            
+            rtn =  i;
+            break;
+        }
+    }
+    
+#ifdef ___NOP
+    SetLogData(LOG_DISP_SET_TM, "Set_Timer()",(uint8_t)dt,(uint8_t)rtn,0,0);
+    printf("Set_Timer(%d) index=%d\r\n",dt,rtn);
+#endif
+       
+    
+    
+    return rtn;
+}
+//==============================================================================
+//
+//==============================================================================
+void Init_Timer(void)
+{
+    uint8_t i;
+    
+    for( i = 0; i < SKTIMER_NUM; i++ ){
+        
+        SKtimer_data[i].flg = ST_TIMER_IDLE;
+        SKtimer_data[i].cnt =  0;
+            
+    }
+}
+
+
+
+//==============================================================================
+//
+//==============================================================================
+
+void ssCount_Timer(void)
+{
+    uint8_t i;
+    
+    for( i = 0; i < SKTIMER_NUM; i++ ){
+        if( SKtimer_data[i].flg == ST_TIMER_USING){
+            if ( SKtimer_data[i].cnt > 0 ){            
+                SKtimer_data[i].cnt --;
+            }
+            if ( SKtimer_data[i].cnt == 0 ){
+                // Call back function
+            }
+        }
+    }
+}
+
+//==============================================================================
+//
+//==============================================================================
+void Rel_Timer(int sel)
+{
+    if(sel <  SKTIMER_NUM){
+        SKtimer_data[sel].flg = ST_TIMER_IDLE;
+        SKtimer_data[sel].cnt = 0;
+    }
+#ifdef ___NOP
+    printf("Rel_Timer(index=%x) \r\n",sel);
+    SetLogData(LOG_DISP_REL_TM, "Rel_Timer()",(uint8_t)sel,0,0,0);
+#endif
+}
+
+//==============================================================================
+//
+//==============================================================================
+void usr_main(void)
+{
+    int ch;
+    
+    ch = getch();
+    if( ch != 0 ){        
+        putch(ch);
+        if( ch == 'q'){
+            usrRasingMode = RASING_MODE_SINGLE;
+        }
+    }
+}

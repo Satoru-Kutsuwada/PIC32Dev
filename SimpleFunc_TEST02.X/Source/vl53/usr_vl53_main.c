@@ -4,35 +4,23 @@
  *  Created on: Aug 10, 2023
  *      Author: nosak
  */
-/* USER CODE END Header */
-/* Includes ------------------------------------------------------------------*/
-//#include "main.h"
-//#include "cmsis_os.h"
 
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
+//==============================================================================
+// include
+//==============================================================================
 #include "usr_system.h"
 #include "vl53l0x_api.h"
-/* USER CODE END Includes */
 
-/* Private typedef -----------------------------------------------------------*/
-
-
-
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
+//==============================================================================
+// define
+//==============================================================================
 #define VERSION_REQUIRED_MAJOR 1 ///< Required sensor major version
 #define VERSION_REQUIRED_MINOR 0 ///< Required sensor minor version
 #define VERSION_REQUIRED_BUILD 4 ///< Required sensor build
-/* USER CODE END PD */
 
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
-
-/* USER CODE END PM */
-
-/* Private variables ---------------------------------------------------------*/
-//extern I2C_HandleTypeDef hi2c1;
+//==============================================================================
+// Variable
+//==============================================================================
 
 uint8_t 	Message[64];
 uint8_t 	MessageLen;
@@ -47,16 +35,19 @@ VL53L0X_RangingMeasurementData_t 	RangingData;
 VL53L0X_Dev_t   MyDevice;
 VL53L0X_DEV    						Dev = &MyDevice;
 
-/* Private function prototypes -----------------------------------------------*/
+RASING_MODE     usrRasingMode;
 
+//==============================================================================
+// Extern Variable
+//==============================================================================
+
+//==============================================================================
+// prototypes
+//==============================================================================
 void vl53_main(void);
-
 void SystemClock_Config(void);
 void vl53l0x_Racing_test(RASING_MODE sel);
 
-//==============================================================================
-//
-//==============================================================================
 
 //==============================================================================
 //
@@ -66,13 +57,23 @@ void print_pal_error(VL53L0X_Error Status){
 
     if( Status != 0 ){
     VL53L0X_GetPalErrorString(Status, buf);
-    //SKprintf("API Status: %i : %s\r\n", Status, buf);
+    Xprintf("API Status: %i : %s\r\n", Status, buf);
 
     }
 }
 //==============================================================================
 //
 //==============================================================================
+void vl53_main(void)
+{
+    
+    if( usrRasingMode != RASING_MODE_NON ){
+        Xprintf("usrRasingMode=%d\r\n",usrRasingMode);
+        vl53l0x_Racing_test(usrRasingMode);
+        usrRasingMode = RASING_MODE_NON;
+    }
+
+}
 
 //==============================================================================
 //
@@ -498,7 +499,7 @@ void vl53l0x_Racing_test(RASING_MODE sel)
 //    MyDevice.I2cHandle = &hi2c1;
     MyDevice.I2cDevAddr = 0x52;
 
-    //SKprintf ("VL53L0X API Simple Ranging example\r\n\n");
+    Xprintf ("VL53L0X API Simple Ranging example\r\n\n");
 
     pMyDevice->I2cDevAddr      = 0x52;
 
@@ -517,9 +518,9 @@ void vl53l0x_Racing_test(RASING_MODE sel)
                 pVersion->minor != VERSION_REQUIRED_MINOR ||
                 pVersion->build != VERSION_REQUIRED_BUILD )
             {
-                //SKprintf("VL53L0X API Version Error: Your firmware has %d.%d.%d (revision %d). This example requires %d.%d.%d.\r\n",
-                //    pVersion->major, pVersion->minor, pVersion->build, pVersion->revision,
-                //    VERSION_REQUIRED_MAJOR, VERSION_REQUIRED_MINOR, VERSION_REQUIRED_BUILD);
+                Xprintf("VL53L0X API Version Error: Your firmware has %d.%d.%d (revision %d). This example requires %d.%d.%d.\r\n",
+                    pVersion->major, pVersion->minor, pVersion->build, pVersion->revision,
+                    VERSION_REQUIRED_MAJOR, VERSION_REQUIRED_MINOR, VERSION_REQUIRED_BUILD);
             }
         }
     }
