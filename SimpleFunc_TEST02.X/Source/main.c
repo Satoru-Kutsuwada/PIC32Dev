@@ -43,11 +43,47 @@
 
 #include "usr_system.h"
 
-
+#ifdef ___NOP
 /* Core configuratin fuse settings */
 #pragma config FPLLMUL = MUL_20, FPLLIDIV = DIV_2, FPLLODIV = DIV_1, FWDTEN = OFF
 #pragma config POSCMOD = HS, FNOSC = PRIPLL, FPBDIV = DIV_2
 #pragma config CP = OFF, BWP = OFF, PWP = OFF
+#endif
+
+
+/*** DEVCFG0 ***/
+#pragma config DEBUG =      OFF
+#pragma config ICESEL =     ICS_PGx2
+#pragma config PWP =        OFF
+#pragma config BWP =        OFF
+#pragma config CP =         OFF
+
+
+/*** DEVCFG1 ***/
+//#pragma config FNOSC =      PRIPLL
+#pragma config FNOSC =      0b001
+#pragma config FPBDIV =     DIV_2
+#pragma config FSOSCEN =    ON
+#pragma config IESO =       OFF
+#pragma config POSCMOD =    HS
+#pragma config OSCIOFNC =   OFF
+#pragma config FCKSM =      CSDCMD
+#pragma config WDTPS =      PS1048576
+#pragma config FWDTEN =     OFF
+
+
+/*** DEVCFG2 ***/
+#pragma config FPLLIDIV =   DIV_2
+#pragma config FPLLMUL =    MUL_20
+#pragma config FPLLODIV =   DIV_1
+#pragma config UPLLEN =     ON
+#pragma config UPLLIDIV =   DIV_2
+
+/*** DEVCFG3 ***/
+#pragma config FSRSSEL =    PRIORITY_7
+#pragma config FVBUSONIO =  ON
+#pragma config USERID =     0xffff
+#pragma config FUSBIDIO =   ON
 
 
 //=============================================================================
@@ -73,6 +109,9 @@ void usr_main(void);
 void vl53_main(void);
 void usrInitTimer1(void);
 void Init_Timer(void);
+void i2c_init(void);
+
+
 //=============================================================================
 //  main
 //=============================================================================
@@ -96,7 +135,16 @@ int main( void )
 
     usrInitTimer1();
     
+    //-----------------------------------------
+    // I2C
+    //-----------------------------------------
+    i2c_init();
 
+    //-----------------------------------------
+    // INTERRUPT
+    //-----------------------------------------
+    INTCONbits.MVEC   = 1;
+    asm volatile("ei");
     
     while(1){
         usr_main();

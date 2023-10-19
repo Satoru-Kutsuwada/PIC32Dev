@@ -2,15 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/D:/PIC32/PIC32Dev/SimpleFunc_TEST02.X/Source/usr_tools.c</file>
-            <file>file:/D:/PIC32/PIC32Dev/SimpleFunc_TEST02.X/Source/main.c</file>
-            <file>file:/D:/PIC32/PIC32Dev/SimpleFunc_TEST02.X/Source/vl53/usr_i2cMain.c</file>
-            <file>file:/D:/PIC32/PIC32Dev/SimpleFunc_TEST02.X/usr_timer.c</file>
-            <file>file:/D:/PIC32/PIC32Dev/SimpleFunc_TEST02.X/Source/usr_system.h</file>
-            <file>file:/D:/PIC32/PIC32Dev/SimpleFunc_TEST02.X/Source/vl53/usr_vl53_main.c</file>
-            <file>file:/D:/PIC32/PIC32Dev/SimpleFunc_TEST02.X/Source/vl53/vl53l0x_api.c</file>
-            <file>file:/D:/PIC32/PIC32Dev/SimpleFunc_TEST02.X/Source/vl53/vl53l0x_platform.c</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

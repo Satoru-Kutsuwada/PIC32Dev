@@ -86,6 +86,8 @@ usrSRTC.usec ++;
     if( usrSRTC.msec == 1000 ){
         usrSRTC.msec = 0;
         usrSRTC.sec ++;
+        usrRTCflg = 1;
+    
         if( usrSRTC.sec == 60 ){
             usrSRTC.sec = 0;
             usrSRTC.min ++;

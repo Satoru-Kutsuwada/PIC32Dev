@@ -4,6 +4,7 @@
 #include <xc.h>	
 #include "usr_system.h"
 
+
 //=============================================================================
 // define
 //=============================================================================
@@ -16,6 +17,15 @@
 
 #define I2C_SEND_ACK  0 
 #define I2C_SEND_NACK 1 
+
+uint16_t usrLogSW_I2C = 1;
+
+#define LOG_PRINT_I2C(...)                                                      \
+{                                                                               \
+    if(usrLogSW_I2C){                                                           \
+        Xprintf(__VA_ARGS__);                                                   \
+    }                                                                           \
+}
 //=============================================================================
 // extern variable
 //=============================================================================
@@ -99,7 +109,7 @@ void Xprintf(const char *string, ...);
 *    400kHz         0x04   0x09   0x13   0x18   0x1D                           
  ********************************************************************/
 
-void i2c_init(uint8_t sel)
+void i2c_init(void)
 {
     
     // Fpb = 40Mhz, Fsk = 400kHz
@@ -144,7 +154,7 @@ uint8_t i2c_CheckIdleWait(uint8_t mask)
 
         
         if( Get_Timer(index) == 0 ){
-            //SetLogDataM( LOG_DISP_I2C, "ERR(TOUT): CheckIdle",I2C_SSPSTAT,I2C_SSPCON1,I2C_SSPCON2,0);
+            LOG_PRINT_I2C( "ERR(TOUT): CheckIdle\r\n");
             i2c_data.error = I2C_ERR_STAT_TIMEOUT;        
             status = STATUS_FAIL;    
             break;   
@@ -168,7 +178,7 @@ uint8_t i2c_start(void)
     status = i2c_CheckIdleWait(0x05);
 
     if( status == STATUS_OK ){
-        //SetLogDataM( LOG_DISP_I2C, "START",I2C_SSPSTAT,I2C_SSPCON1,I2C_SSPCON2,0);
+        LOG_PRINT_I2C( "i2c_start(%p,%x)\r\n",(uint32_t)I2C_CON,(uint16_t)I2C_STAT);
         
 
         I2C_ICIF = 0;
@@ -177,21 +187,21 @@ uint8_t i2c_start(void)
         I2C_SEN = 1;
 
         index = Set_Timer(100);
-        while( I2C_ICIF == 0 ){
+        while( I2C_SEN == 1 ){
             if(bcl_error_chk){
-                //SetLogDataM( LOG_DISP_I2C, "ERR(BCL): START",I2C_SSPSTAT,I2C_SSPCON1,I2C_SSPCON2,0);
+                LOG_PRINT_I2C("ERR(BCL): START\r\n");
                 i2c_data.error = I2C_ERR_STAT_BCL;      
                 status = STATUS_FAIL;    
             }
             if(I2C_IWCOL){
-                //SetLogDataM( LOG_DISP_I2C, "ERR(WCOL): START",I2C_SSPSTAT,I2C_SSPCON1,I2C_SSPCON2,0);
+                LOG_PRINT_I2C( "ERR(WCOL): START\r\n");
                 I2C_IWCOL = 0;
                 i2c_data.error = I2C_ERR_STAT_WCOL;        
                 status = STATUS_FAIL;    
                 break         ;   
             }
             if( Get_Timer(index) == 0 ){
-                //SetLogDataM( LOG_DISP_I2C, "ERR(TOUT): START",I2C_SSPSTAT,I2C_SSPCON1,I2C_SSPCON2,0);
+                LOG_PRINT_I2C("ERR(TOUT): START(%p,%x)\r\n",(uint32_t)I2C_CON,(uint16_t)I2C_STAT);
                 i2c_data.error = I2C_ERR_STAT_TIMEOUT;        
                 status = STATUS_FAIL;    
                 break         ;   
@@ -218,7 +228,7 @@ uint8_t i2c_stop(void)
     status = i2c_CheckIdleWait(0x05);
 
     if( status == STATUS_OK ){
-        //SetLogDataM( LOG_DISP_I2C, "STOP",I2C_SSPSTAT,I2C_SSPCON1,I2C_SSPCON2,0);
+        LOG_PRINT_I2C( "i2c_stop(%p,%x)\r\n",(uint32_t)I2C_CON,(uint16_t)I2C_STAT);
 
         I2C_ICIF = 0;
         //I2C_BCLIF = 0;
@@ -226,22 +236,21 @@ uint8_t i2c_stop(void)
         I2C_PEN = 1;
 
         index = Set_Timer(100);
-        while(I2C_ICIF == 0 )
-        {
+        while( I2C_PEN  ){
             if(bcl_error_chk){
-                //SetLogDataM( LOG_DISP_I2C, "ERR(BCL): STOP",I2C_SSPSTAT,I2C_SSPCON1,I2C_SSPCON2,0);
+                LOG_PRINT_I2C( "ERR(BCL): STOP\r\n");
                 i2c_data.error = I2C_ERR_STAT_BCL;      
                 status = STATUS_FAIL;    
             }
             if(I2C_IWCOL){
-                //SetLogDataM( LOG_DISP_I2C, "ERR(WCOL): STOP",I2C_SSPSTAT,I2C_SSPCON1,I2C_SSPCON2,0);
+                LOG_PRINT_I2C( "ERR(WCOL): STOP\r\n");
                 I2C_IWCOL = 0;
                 i2c_data.error = I2C_ERR_STAT_WCOL;        
                 status = STATUS_FAIL;    
                 break;           
             }
             if( Get_Timer(index) == 0 ){
-                //SetLogDataM( LOG_DISP_I2C, "ERR(TOUT): STOP",I2C_SSPSTAT,I2C_SSPCON1,I2C_SSPCON2,0);
+                LOG_PRINT_I2C( "ERR(TOUT): STOP\r\n");
                 i2c_data.error = I2C_ERR_STAT_TIMEOUT;        
                 status = STATUS_FAIL;    
                 break;   
@@ -269,10 +278,10 @@ uint8_t i2c_write( uint8_t dt )
 
     if( status == STATUS_OK ){
         if( i2c_data.status < I2C_STAT_MAX ){
-            //SetLogDataM( LOG_DISP_I2C, &i2c_list[i2c_data.status].string[0],I2C_SSPSTAT,I2C_SSPCON1,I2C_SSPCON2,dt);
+            LOG_PRINT_I2C( "i2c_write()\r\n");
         }
         else{
-            Xprintf("ERROR STATUS = %d\r\n",i2c_data.status);
+            LOG_PRINT_I2C("ERROR STATUS = %d\r\n",i2c_data.status);
         }
         I2C_ICIF = 0;
         //I2C_BCLIF = 0;
@@ -280,21 +289,21 @@ uint8_t i2c_write( uint8_t dt )
         I2C_TRN = dt;
 
         index = Set_Timer(100);
-        while( I2C_ICIF == 0 ) {
+        while( I2C_TRSTAT ||  I2C_TBF ) {
             if(bcl_error_chk){
-                //SetLogDataM( LOG_DISP_I2C, "ERR(BCL): WRITE",I2C_SSPSTAT,I2C_SSPCON1,I2C_SSPCON2,0);
+                LOG_PRINT_I2C( "ERR(BCL): WRITE\r\n");
                 i2c_data.error = I2C_ERR_STAT_BCL;      
                 status = STATUS_FAIL;    
             }
             if(I2C_IWCOL){
-                //SetLogDataM( LOG_DISP_I2C, "ERR(WCOL): WRITE",I2C_SSPSTAT,I2C_SSPCON1,I2C_SSPCON2,0);
+                LOG_PRINT_I2C( "ERR(WCOL): WRITE\r\n");
                 I2C_IWCOL = 0;
                 i2c_data.error = I2C_ERR_STAT_WCOL;        
                 status = STATUS_FAIL;    
                 break;           
             }
             if( Get_Timer(index) == 0 ){
-                //SetLogDataM( LOG_DISP_I2C, "ERR(TOUT): WRITE",I2C_SSPSTAT,I2C_SSPCON1,I2C_SSPCON2,0);
+                LOG_PRINT_I2C( "ERR(TOUT): WRITE\r\n");
                 i2c_data.error = I2C_ERR_STAT_TIMEOUT;        
                 status = STATUS_FAIL;    
                 break;   
@@ -304,12 +313,12 @@ uint8_t i2c_write( uint8_t dt )
     
         if( status == STATUS_OK ){
             if( I2C_ACKSTAT ){
-                //SetLogDataM( LOG_DISP_I2C, "ERR(NACK): WRITE",I2C_SSPSTAT,I2C_SSPCON1,I2C_SSPCON2,dt);
+                LOG_PRINT_I2C( "ERR(NACK): WRITE\r\n");
                 i2c_data.error = I2C_ERR_STAT_NACK;
                 status = STATUS_FAIL;    
             }
             else{
-                //SetLogDataM( LOG_DISP_I2C, "WRITE ACK",I2C_SSPSTAT,I2C_SSPCON1,I2C_SSPCON2,dt);
+                LOG_PRINT_I2C( "WRITE ACK\r\n");
             }
         }
     }
@@ -331,7 +340,7 @@ uint8_t i2c_read( uint8_t acknNak, uint8_t *dt )
     status = i2c_CheckIdleWait(0x05);
 
     if( status == STATUS_OK ){
-        //SetLogDataM( LOG_DISP_I2C, "READ START",I2C_SSPSTAT,I2C_SSPCON1,I2C_SSPCON2,0);
+        LOG_PRINT_I2C( "i2c_read()\r\n");
 
         I2C_ICIF = 0;
         //I2C_BCLIF = 0;
@@ -339,21 +348,21 @@ uint8_t i2c_read( uint8_t acknNak, uint8_t *dt )
         I2C_RCEN   = 1;
 
         index = Set_Timer(100);
-        while(I2C_ICIF == 0 ){
+        while( I2C_RCEN ){
             if(bcl_error_chk){
-                //SetLogDataM( LOG_DISP_I2C, "ERR(BCL): READ",I2C_SSPSTAT,I2C_SSPCON1,I2C_SSPCON2,0);
+                LOG_PRINT_I2C( "ERR(BCL): READ\r\n");
                 i2c_data.error = I2C_ERR_STAT_BCL;      
                 status = STATUS_FAIL;    
             }
             if(I2C_IWCOL){
-                //SetLogDataM( LOG_DISP_I2C, "ERR(WCOL): READ",I2C_SSPSTAT,I2C_SSPCON1,I2C_SSPCON2,0);
+                LOG_PRINT_I2C( "ERR(WCOL): READ\r\n");
                 I2C_IWCOL = 0;
                 i2c_data.error = I2C_ERR_STAT_WCOL;        
                 status = STATUS_FAIL;    
                 break;           
             }
             if( Get_Timer(index) == 0 ){
-                //SetLogDataM( LOG_DISP_I2C, "ERR(TOUT): READ",I2C_SSPSTAT,I2C_SSPCON1,I2C_SSPCON2,0);
+                LOG_PRINT_I2C( "ERR(TOUT): READ\r\n");
                 i2c_data.error = I2C_ERR_STAT_TIMEOUT;        
                 status = STATUS_FAIL;    
                 break;   
@@ -371,7 +380,7 @@ uint8_t i2c_read( uint8_t acknNak, uint8_t *dt )
             I2C_ACKDT = acknNak ;        // ACKデータのセット
             I2C_ACKEN = 1 ;          // ACKデータを返す
         }
-        //SetLogDataM( LOG_DISP_I2C, "READ END",I2C_SSPSTAT,I2C_SSPCON1,I2C_SSPCON2,*dt);
+        LOG_PRINT_I2C( "READ END\r\n");
     }
 
     return  status;
@@ -393,7 +402,7 @@ int32_t i2c_writeMulti(uint8_t address,uint8_t reg, uint8_t *dst, uint8_t count)
   
     
     if( count > MAX_MULTI_CNT ){
-        Xprintf("Error I2CData Size Over");
+        LOG_PRINT_I2C("Error I2CData Size Over");
         status = STATUS_FAIL;          
     }
     else{
@@ -418,10 +427,9 @@ int32_t i2c_writeMulti(uint8_t address,uint8_t reg, uint8_t *dst, uint8_t count)
 
         for( i=0; i<count; i++ ){
             i2c_data.dt[i] = *dst;
-//            Xprintf("dt=0x%x,",*dst);
             dst ++;
         }
-//            Xprintf("\r\n");
+
 
         // 割込みフラグクリア
         I2C_ICIF = 0;
@@ -476,7 +484,7 @@ int32_t i2c_writeMulti(uint8_t address,uint8_t reg, uint8_t *dst, uint8_t count)
                     }
                     break;
                 default:
-                    Xprintf("ERROR (WRITE MAIN) STATUS = %d\r\n",i2c_data.status);
+                    LOG_PRINT_I2C("ERROR (WRITE MAIN) STATUS = %d\r\n",i2c_data.status);
 
                     break;
             }
@@ -522,10 +530,10 @@ int32_t i2c_writeMulti(uint8_t address,uint8_t reg, uint8_t *dst, uint8_t count)
                     I2C_ICIE = 0;
                     //I2C_BCLIE = 1; 
                     
-                    //SetLogDataM( LOG_DISP_I2C, "RESTART",I2C_SSPSTAT,I2C_SSPCON1,I2C_SSPCON2,0);
+                    LOG_PRINT_I2C( "RESTART\r\n");
                 }
                 else{
-                    //SetLogDataM( LOG_DISP_I2C, "ERROR_END",I2C_SSPSTAT,I2C_SSPCON1,I2C_SSPCON2,0);
+                    LOG_PRINT_I2C( "ERROR_END\r\n");
                 }
             }
         }
@@ -546,7 +554,7 @@ int32_t i2c_readMulti(uint8_t address,uint8_t reg, uint8_t *dst, uint8_t count)
 
 
     if( count > MAX_MULTI_CNT ){
-        Xprintf("Error I2CData Size Over");
+        LOG_PRINT_I2C("Error I2CData Size Over");
         status = STATUS_FAIL;          
     }
     else{
@@ -587,7 +595,7 @@ int32_t i2c_readMulti(uint8_t address,uint8_t reg, uint8_t *dst, uint8_t count)
         // 処理
         //++++++++++++++++++++++++++++++++++++++++++++++++++
         while( status == STATUS_OK ){
-            ////SetLogDataM( LOG_DISP_I2C_STAT, "STATUS",i2c_data.status,0,0,0);
+            LOG_PRINT_I2C("STATUS=%d\r\n",i2c_data.status);
             switch( i2c_data.status ){
                 case I2C_STAT_START:
                     status = i2c_start();
@@ -652,7 +660,7 @@ int32_t i2c_readMulti(uint8_t address,uint8_t reg, uint8_t *dst, uint8_t count)
                     }
                     break;
                 default:
-                    Xprintf("ERROR (READ MAIN) STATUS = %d\r\n",i2c_data.status);
+                    LOG_PRINT_I2C("ERROR (READ MAIN) STATUS = %d\r\n",i2c_data.status);
                     break;
             }
             
@@ -703,10 +711,10 @@ int32_t i2c_readMulti(uint8_t address,uint8_t reg, uint8_t *dst, uint8_t count)
                     I2C_ICIE = 0;
                     //I2C_BCLIE = 1; 
 
-                    //SetLogDataM( LOG_DISP_I2C, "RESTART",I2C_SSPSTAT,I2C_SSPCON1,I2C_SSPCON2,0);
+                    LOG_PRINT_I2C( "RESTART(%p,%x)\r\n",(uint32_t)I2C_CON,(uint16_t)I2C_STAT);
                 }
                 else{
-                    //SetLogDataM( LOG_DISP_I2C, "ERROR_END",I2C_SSPSTAT,I2C_SSPCON1,I2C_SSPCON2,0);
+                    LOG_PRINT_I2C( "ERROR_END\r\n");
                 }
             }
         }

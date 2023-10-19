@@ -29,7 +29,9 @@ const char ConvC[]= { '0','1','2','3','4','5','6','7','8','9','a','b','c','d','e
 // Extern Variable
 //==============================================================================
 extern  RASING_MODE     usrRasingMode;
-
+extern  USR_RTC_DATA    usrSRTC;
+extern  uint16_t        usrRTCflg;
+extern  uint16_t        usrLogSW_I2C;
 
 
 
@@ -379,7 +381,7 @@ void Xprintf(const char *string, ...)
                     case  'x':
                         uintvalue = (uint16_t)va_arg(ap, int);
                         //printf("uintvalue=%x\r\n",uintvalue);
-                        buffer = my_putshex(uintvalue, 0, buffer );
+                        buffer = my_putshex(uintvalue, 4, buffer );
                         break;
                     case  'p':
                         uint32value = (long)va_arg(ap, long);
@@ -579,5 +581,22 @@ void usr_main(void)
         if( ch == 'q'){
             usrRasingMode = RASING_MODE_SINGLE;
         }
+        if( ch == 'l'){
+            usrLogSW_I2C ^= 1;
+        }
     }
+    
+#ifdef ___NOP
+    if( usrRTCflg == 1 ){
+        usrRTCflg = 0;
+        
+        Xprintf("%d:%d:%d %d.%d\r\n",
+            usrSRTC.hour,
+            usrSRTC.min ,
+            usrSRTC.sec ,
+            usrSRTC.msec ,
+            usrSRTC.usec );
+    } 
+#endif
+    
 }

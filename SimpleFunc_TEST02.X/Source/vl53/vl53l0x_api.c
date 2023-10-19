@@ -589,8 +589,6 @@ VL53L0X_Error VL53L0X_DataInit(VL53L0X_DEV Dev)
 
 	//LOG_FUNCTION_START("");
 
-    Xprintf("_DataInit() START\r\n");
-
 	/*
      * デフォルトでは、I2C は 1V8 で実行されています。
      * これを変更したい場合は、コンパイル レベルでこの定義を含める必要があります。
@@ -604,7 +602,6 @@ VL53L0X_Error VL53L0X_DataInit(VL53L0X_DEV Dev)
 
 	/* Set I2C standard mode */
 	if (Status == VL53L0X_ERROR_NONE){
-        Xprintf("VL53L0X_WrByte()\r\n");
         Status = VL53L0X_WrByte(Dev, 0x88, 0x00);
     }
 	VL53L0X_SETDEVICESPECIFICPARAMETER(Dev, ReadDataFromDeviceDone, 0);

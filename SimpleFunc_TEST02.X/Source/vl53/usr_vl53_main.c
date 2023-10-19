@@ -11,6 +11,9 @@
 #include "usr_system.h"
 #include "vl53l0x_api.h"
 
+uint16_t usrLogSW_VL53 = 1;
+
+
 //==============================================================================
 // define
 //==============================================================================
@@ -47,7 +50,7 @@ RASING_MODE     usrRasingMode;
 void vl53_main(void);
 void SystemClock_Config(void);
 void vl53l0x_Racing_test(RASING_MODE sel);
-
+void Xprintf(const char *string, ...);
 
 //==============================================================================
 //
@@ -56,8 +59,8 @@ void print_pal_error(VL53L0X_Error Status){
     char buf[VL53L0X_MAX_STRING_LENGTH];
 
     if( Status != 0 ){
-    VL53L0X_GetPalErrorString(Status, buf);
-    Xprintf("API Status: %i : %s\r\n", Status, buf);
+        VL53L0X_GetPalErrorString(Status, buf);
+        LOG_PRINT_VL53("API Status: %i : %s\r\n", Status, buf);
 
     }
 }
@@ -68,7 +71,7 @@ void vl53_main(void)
 {
     
     if( usrRasingMode != RASING_MODE_NON ){
-        Xprintf("usrRasingMode=%d\r\n",usrRasingMode);
+        LOG_PRINT_VL53("usrRasingMode=%d\r\n",usrRasingMode);
         vl53l0x_Racing_test(usrRasingMode);
         usrRasingMode = RASING_MODE_NON;
     }
@@ -225,7 +228,7 @@ VL53L0X_Error SK_RangingTest(VL53L0X_Dev_t *pMyDevice, RASING_MODE sel)
      */
     if(Status == VL53L0X_ERROR_NONE)
     {
-        //SKprintf ("Call of VL53L0X_StaticInit\r\n");
+        LOG_PRINT_VL53 ("1 VL53L0X_StaticInit()\r\n\n");
         Status = VL53L0X_StaticInit(pMyDevice); // Device Initialization
         print_pal_error(Status);
     }
@@ -233,14 +236,14 @@ VL53L0X_Error SK_RangingTest(VL53L0X_Dev_t *pMyDevice, RASING_MODE sel)
 
     if(Status == VL53L0X_ERROR_NONE)
     {
-        //SKprintf ("Call of VL53L0X_PerformRefCalibration\r\n");
+        LOG_PRINT_VL53 ("2 VL53L0X_PerformRefCalibration()\r\n\n");
         Status = VL53L0X_PerformRefCalibration(pMyDevice, &VhvSettings, &PhaseCal); // Device Initialization
         print_pal_error(Status);
     }
 
     if(Status == VL53L0X_ERROR_NONE)
     {
-        //SKprintf ("Call of VL53L0X_PerformRefSpadManagement\r\n");
+        LOG_PRINT_VL53 ("3 VL53L0X_PerformRefSpadManagement()\r\n\n");
         Status = VL53L0X_PerformRefSpadManagement(pMyDevice, &refSpadCount, &isApertureSpads); // Device Initialization
 
         print_pal_error(Status);
@@ -249,7 +252,8 @@ VL53L0X_Error SK_RangingTest(VL53L0X_Dev_t *pMyDevice, RASING_MODE sel)
     if(Status == VL53L0X_ERROR_NONE)
     {
 
-            Status = VL53L0X_SetDeviceMode(pMyDevice, VL53L0X_DEVICEMODE_SINGLE_RANGING); // Setup in single ranging mode
+        LOG_PRINT_VL53 ("4 VL53L0X_SetDeviceMode()\r\n\n");
+        Status = VL53L0X_SetDeviceMode(pMyDevice, VL53L0X_DEVICEMODE_SINGLE_RANGING); // Setup in single ranging mode
 
 
         print_pal_error(Status);
@@ -285,15 +289,18 @@ VL53L0X_Error SK_RangingTest(VL53L0X_Dev_t *pMyDevice, RASING_MODE sel)
      */
 
     if (Status == VL53L0X_ERROR_NONE) {
+        LOG_PRINT_VL53 ("5 VL53L0X_SetLimitCheckEnable()\r\n\n");
         Status = VL53L0X_SetLimitCheckEnable(pMyDevice, VL53L0X_CHECKENABLE_SIGMA_FINAL_RANGE, 1);
     }
 
     if (Status == VL53L0X_ERROR_NONE) {
+        LOG_PRINT_VL53 ("6 VL53L0X_SetLimitCheckEnable()\r\n\n");
         Status = VL53L0X_SetLimitCheckEnable(pMyDevice, VL53L0X_CHECKENABLE_SIGNAL_RATE_FINAL_RANGE, 1);
     }
 
     if (Status == VL53L0X_ERROR_NONE) {
         if(sel == RASING_MODE_SINGLE){
+            LOG_PRINT_VL53 ("7 VL53L0X_SetLimitCheckEnable()\r\n\n");
             Status = VL53L0X_SetLimitCheckEnable(pMyDevice, VL53L0X_CHECKENABLE_RANGE_IGNORE_THRESHOLD, 1);
         }
     }
@@ -308,6 +315,7 @@ VL53L0X_Error SK_RangingTest(VL53L0X_Dev_t *pMyDevice, RASING_MODE sel)
     switch(sel){
     case RASING_MODE_SINGLE:
         if (Status == VL53L0X_ERROR_NONE) {
+            LOG_PRINT_VL53 ("8 VL53L0X_SetLimitCheckValue()\r\n\n");
             Status = VL53L0X_SetLimitCheckValue(pMyDevice, VL53L0X_CHECKENABLE_RANGE_IGNORE_THRESHOLD, (FixPoint1616_t)(1.5*0.023*65536));
         }
          break;
@@ -427,8 +435,9 @@ VL53L0X_Error SK_RangingTest(VL53L0X_Dev_t *pMyDevice, RASING_MODE sel)
              *
              */
             ////SKprintf ("Call of VL53L0X_PerformSingleRangingMeasurement\r\n");
+            //LOG_PRINT_VL53 ("9 VL53L0X_PerformSingleRangingMeasurement()\r\n\n");
             Status = VL53L0X_PerformSingleRangingMeasurement(pMyDevice, &RangingMeasurementData);
-            //SKprintf("002 Range MilliMeter = %d(%d),",RangingMeasurementData.RangeMilliMeter,pMyDevice->Data.LastRangeMeasure.RangeMilliMeter);
+            Xprintf("Range MilliMeter = %d(%d),",RangingMeasurementData.RangeMilliMeter,pMyDevice->Data.LastRangeMeasure.RangeMilliMeter);
 
             print_pal_error(Status);
             print_range_status(&RangingMeasurementData);
@@ -448,10 +457,10 @@ VL53L0X_Error SK_RangingTest(VL53L0X_Dev_t *pMyDevice, RASING_MODE sel)
             case RASING_MODE_SINGLE_HA:
             case RASING_MODE_SINGLE_HS:
                 VL53L0X_GetLimitCheckCurrent(pMyDevice, VL53L0X_CHECKENABLE_RANGE_IGNORE_THRESHOLD, &LimitCheckCurrent);
-                //SKprintf(",RANGE IGNORE THRESHOLD: %f\r\n", (float)LimitCheckCurrent/65536.0);
+                Xprintf(",RANGE IGNORE THRESHOLD: %f\r\n", (float)LimitCheckCurrent/65536.0);
                 break;
            case RASING_MODE_SINGLE_LR:
-               //SKprintf("\r\n");
+               Xprintf("\r\n");
             default:
                 break;
             }
@@ -468,6 +477,7 @@ VL53L0X_Error SK_RangingTest(VL53L0X_Dev_t *pMyDevice, RASING_MODE sel)
 
     }
    
+    LOG_PRINT_VL53 ("SK_RangingTest() End\r\n\n");
 
     return Status;
 
@@ -495,12 +505,10 @@ void vl53l0x_Racing_test(RASING_MODE sel)
     int NecleoComStatus = 0;
     int NecleoAutoCom = 1;
 
+    LOG_PRINT_VL53 ("vl53l0x_Racing_test()\r\n\n");
 
 //    MyDevice.I2cHandle = &hi2c1;
     MyDevice.I2cDevAddr = 0x52;
-
-    Xprintf ("VL53L0X API Simple Ranging example\r\n\n");
-
     pMyDevice->I2cDevAddr      = 0x52;
 
     /*
@@ -511,6 +519,7 @@ void vl53l0x_Racing_test(RASING_MODE sel)
         status_int = VL53L0X_GetVersion(pVersion);
         if (status_int != 0){
             Status = VL53L0X_ERROR_CONTROL_INTERFACE;
+            LOG_PRINT_VL53 ("Error:VL53L0X_GetVersion()\r\n\n");
         }
         else{
             //  Verify the version of the VL53L0X API running in the firmware
@@ -518,7 +527,7 @@ void vl53l0x_Racing_test(RASING_MODE sel)
                 pVersion->minor != VERSION_REQUIRED_MINOR ||
                 pVersion->build != VERSION_REQUIRED_BUILD )
             {
-                Xprintf("VL53L0X API Version Error: Your firmware has %d.%d.%d (revision %d). This example requires %d.%d.%d.\r\n",
+                LOG_PRINT_VL53("VL53L0X API Version Error: Your firmware has %d.%d.%d (revision %d). This example requires %d.%d.%d.\r\n",
                     pVersion->major, pVersion->minor, pVersion->build, pVersion->revision,
                     VERSION_REQUIRED_MAJOR, VERSION_REQUIRED_MINOR, VERSION_REQUIRED_BUILD);
             }
@@ -542,11 +551,13 @@ void vl53l0x_Racing_test(RASING_MODE sel)
      */
     if(Status == VL53L0X_ERROR_NONE){
         //SKprintf ("Call of VL53L0X_DataInit\r\n");
+        LOG_PRINT_VL53 ("VL53L0X_DataInit()\r\n\n");
         Status = VL53L0X_DataInit(&MyDevice); // Data initialization
         print_pal_error(Status);
     }
 
     if(Status == VL53L0X_ERROR_NONE){
+        LOG_PRINT_VL53 ("VL53L0X_GetDeviceInfo()\r\n\n");
         Status = VL53L0X_GetDeviceInfo(&MyDevice, &DeviceInfo);
 
         if(Status == VL53L0X_ERROR_NONE){
@@ -566,9 +577,13 @@ void vl53l0x_Racing_test(RASING_MODE sel)
     }
 
     if(Status == VL53L0X_ERROR_NONE){
+        LOG_PRINT_VL53 ("SK_RangingTest()\r\n\n");
         Status = SK_RangingTest( pMyDevice,sel);
     }
-
+    
     print_pal_error(Status);
+    
+    LOG_PRINT_VL53 ("vl53l0x_Racing_test() End\r\n\n");
+
 }
 
