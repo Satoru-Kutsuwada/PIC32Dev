@@ -32,7 +32,7 @@ extern  RASING_MODE     usrRasingMode;
 extern  USR_RTC_DATA    usrSRTC;
 extern  uint16_t        usrRTCflg;
 extern  uint16_t        usrLogSW_I2C;
-
+extern  uint16_t        usrRasingMode2;
 
 
 
@@ -578,11 +578,19 @@ void usr_main(void)
     ch = getch();
     if( ch != 0 ){        
         putch(ch);
-        if( ch == 'q'){
+        switch( ch ){
+        case 'q':
             usrRasingMode = RASING_MODE_SINGLE;
-        }
-        if( ch == 'l'){
+            break;
+        case 'l':
             usrLogSW_I2C ^= 1;
+            Xprintf("usrLogSW_I2C=%d\r\n",usrLogSW_I2C);
+            break;
+        case 'w':
+            usrRasingMode2 = 1;
+            break;
+        default:
+            break;
         }
     }
     

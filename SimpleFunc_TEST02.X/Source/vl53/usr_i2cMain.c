@@ -18,7 +18,7 @@
 #define I2C_SEND_ACK  0 
 #define I2C_SEND_NACK 1 
 
-uint16_t usrLogSW_I2C = 1;
+uint16_t usrLogSW_I2C = 0;
 
 #define LOG_PRINT_I2C(...)                                                      \
 {                                                                               \

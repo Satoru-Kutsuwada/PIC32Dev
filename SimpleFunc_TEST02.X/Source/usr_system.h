@@ -736,12 +736,17 @@ typedef enum{
 }RASING_MODE;
 
 
+#define LOG_PRINT_VL53(...)      
+
+#ifdef ___NOP
 #define LOG_PRINT_VL53(...)                                                      \
 {                                                                               \
     if(usrLogSW_VL53){                                                           \
         Xprintf(__VA_ARGS__);                                                   \
     }                                                                           \
 }
+
+#endif
 
 //ppppppppppppppppppppppppppppppp
 

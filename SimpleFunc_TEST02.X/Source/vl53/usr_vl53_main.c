@@ -39,7 +39,7 @@ VL53L0X_Dev_t   MyDevice;
 VL53L0X_DEV    						Dev = &MyDevice;
 
 RASING_MODE     usrRasingMode;
-
+uint16_t        usrRasingMode2;
 //==============================================================================
 // Extern Variable
 //==============================================================================
@@ -69,12 +69,34 @@ void print_pal_error(VL53L0X_Error Status){
 //==============================================================================
 void vl53_main(void)
 {
-    
+    VL53L0X_Error Status;
+    VL53L0X_RangingMeasurementData_t    RangingMeasurementData;
+FixPoint1616_t LimitCheckCurrent;
+
     if( usrRasingMode != RASING_MODE_NON ){
         LOG_PRINT_VL53("usrRasingMode=%d\r\n",usrRasingMode);
         vl53l0x_Racing_test(usrRasingMode);
         usrRasingMode = RASING_MODE_NON;
     }
+    
+    switch( usrRasingMode2  ){
+        case 1:
+             Status = VL53L0X_PerformSingleRangingMeasurement(Dev, &RangingMeasurementData);
+            Xprintf("Range MilliMeter = %d(%d),",RangingMeasurementData.RangeMilliMeter,Dev->Data.LastRangeMeasure.RangeMilliMeter);
+
+            print_pal_error(Status);
+            print_range_status(&RangingMeasurementData);
+
+            VL53L0X_GetLimitCheckCurrent(Dev, VL53L0X_CHECKENABLE_RANGE_IGNORE_THRESHOLD, &LimitCheckCurrent);
+            Xprintf(",RANGE IGNORE THRESHOLD: %f\r\n", (float)LimitCheckCurrent/65536.0);
+                
+            usrRasingMode2 = 0;
+                
+            break;
+        case 2:
+            break;
+    }
+    
 
 }
 
@@ -140,7 +162,7 @@ void print_range_status(VL53L0X_RangingMeasurementData_t* pRangingMeasurementDat
     RangeStatus = pRangingMeasurementData->RangeStatus;
 
     VL53L0X_GetRangeStatusString(RangeStatus, buf);
-    //SKprintf(" Range Status: %i : %s ", RangeStatus, buf);
+    Xprintf(" Range Status: %d : %s ", RangeStatus, (char *)buf);
 
 }
 
