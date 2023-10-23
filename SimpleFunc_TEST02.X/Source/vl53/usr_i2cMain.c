@@ -121,10 +121,14 @@ void i2c_init(void)
     I2C_SDA = 1;
 
     // Interrupt
-    I2C_ICIP = 7;
-    I2C_ICIS = 0;
-    I2C_ICIF = 0;
-    I2C_ICIE = 1;
+    I2C_BIF = 0;
+    I2C_MIF = 0;
+    I2C_BIE = 0;
+    I2C_MIE = 0;
+    I2C_IP = 7;
+    I2C_IS = 0;
+
+            
     
     // I2C Enable
     I2C_ON = 1;
@@ -181,8 +185,9 @@ uint8_t i2c_start(void)
         LOG_PRINT_I2C( "i2c_start(%p,%x)\r\n",(uint32_t)I2C_CON,(uint16_t)I2C_STAT);
         
 
-        I2C_ICIF = 0;
-        //I2C_BCLIF = 0;
+        I2C_BIF = 0;
+        I2C_MIF = 0;
+
 
         I2C_SEN = 1;
 
@@ -230,8 +235,8 @@ uint8_t i2c_stop(void)
     if( status == STATUS_OK ){
         LOG_PRINT_I2C( "i2c_stop(%p,%x)\r\n",(uint32_t)I2C_CON,(uint16_t)I2C_STAT);
 
-        I2C_ICIF = 0;
-        //I2C_BCLIF = 0;
+        I2C_BIF = 0;
+        I2C_MIF = 0;
 
         I2C_PEN = 1;
 
@@ -283,8 +288,8 @@ uint8_t i2c_write( uint8_t dt )
         else{
             LOG_PRINT_I2C("ERROR STATUS = %d\r\n",i2c_data.status);
         }
-        I2C_ICIF = 0;
-        //I2C_BCLIF = 0;
+        I2C_BIF = 0;
+        I2C_MIF = 0;
 
         I2C_TRN = dt;
 
@@ -342,8 +347,8 @@ uint8_t i2c_read( uint8_t acknNak, uint8_t *dt )
     if( status == STATUS_OK ){
         LOG_PRINT_I2C( "i2c_read()\r\n");
 
-        I2C_ICIF = 0;
-        //I2C_BCLIF = 0;
+        I2C_BIF = 0;
+        I2C_MIF = 0;
 
         I2C_RCEN   = 1;
 
@@ -432,12 +437,12 @@ int32_t i2c_writeMulti(uint8_t address,uint8_t reg, uint8_t *dst, uint8_t count)
 
 
         // 割込みフラグクリア
-        I2C_ICIF = 0;
-        //I2C_BCLIF = 0;
+        I2C_BIF = 0;
+        I2C_MIF = 0;
 
         // 割込みイネーブル
-        I2C_ICIE = 0;
-        //I2C_BCLIE = 1; 
+        I2C_BIE = 0;
+        I2C_MIE = 1;
         
         
         //++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -499,8 +504,12 @@ int32_t i2c_writeMulti(uint8_t address,uint8_t reg, uint8_t *dst, uint8_t count)
             else{
                 // リカバリー処理　今は強制終了
                 I2C_ON = 0;
-                I2C_ICIE = 0;
-//                I2C_BCLIE = 0; 
+                // 割込みフラグクリア
+                I2C_BIF = 0;
+                I2C_MIF = 0;
+
+        
+        
             
                 //Wait(1);
                 
@@ -523,12 +532,15 @@ int32_t i2c_writeMulti(uint8_t address,uint8_t reg, uint8_t *dst, uint8_t count)
                     i2c_data.error = I2C_NO_ERROR;
 
                     // 割込みフラグクリア
-                    I2C_ICIF = 0;
-                    //I2C_BCLIF = 0;
+                    I2C_BIF = 0;
+                    I2C_MIF = 0;
 
                     // 割込みイネーブル
-                    I2C_ICIE = 0;
-                    //I2C_BCLIE = 1; 
+                    I2C_BIE = 0;
+                    I2C_MIE = 1;
+        
+        
+
                     
                     LOG_PRINT_I2C( "RESTART\r\n");
                 }
@@ -583,13 +595,15 @@ int32_t i2c_readMulti(uint8_t address,uint8_t reg, uint8_t *dst, uint8_t count)
         }
 
         // 割込みフラグクリア
-        I2C_ICIF = 0;
-        //I2C_BCLIF = 0;
+        I2C_BIF = 0;
+        I2C_MIF = 0;
 
         // 割込みイネーブル
-        I2C_ICIE = 0;
-        //I2C_BCLIE = 1; 
+        I2C_BIE = 0;
+        I2C_MIE = 1;
         
+        
+
         
         //++++++++++++++++++++++++++++++++++++++++++++++++++
         // 処理
@@ -681,8 +695,14 @@ int32_t i2c_readMulti(uint8_t address,uint8_t reg, uint8_t *dst, uint8_t count)
             else{
                 // リカバリー処理　今は強制終了
                 I2C_ON = 0;
-                I2C_ICIE = 0;
-                //I2C_BCLIE = 0; 
+
+
+                // 割込みイネーブル
+                I2C_BIE = 0;
+                I2C_MIE = 1;
+        
+        
+
 
                 
                 //Wait(1);
@@ -704,12 +724,15 @@ int32_t i2c_readMulti(uint8_t address,uint8_t reg, uint8_t *dst, uint8_t count)
                     i2c_data.error = I2C_NO_ERROR;
 
                     // 割込みフラグクリア
-                    I2C_ICIF = 0;
-                    //I2C_BCLIF = 0;
+                    I2C_BIF = 0;
+                    I2C_MIF = 0;
 
                     // 割込みイネーブル
-                    I2C_ICIE = 0;
-                    //I2C_BCLIE = 1; 
+                    I2C_BIE = 0;
+                    I2C_MIE = 1;
+        
+        
+
 
                     LOG_PRINT_I2C( "RESTART(%p,%x)\r\n",(uint32_t)I2C_CON,(uint16_t)I2C_STAT);
                 }

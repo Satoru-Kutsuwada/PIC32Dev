@@ -41,6 +41,25 @@ typedef struct {
 #define usrBAUNRATE         				( 115200UL )
     
 
+#define _I2C_3_VECTOR                            24
+#define _I2C_1_VECTOR                            25
+#define _I2C_4_VECTOR                            31
+#define _I2C_5_VECTOR                            32
+
+#define _UART_1_VECTOR                           24
+#define _UART_3_VECTOR                           31
+#define _UART_2_VECTOR                           32
+#define _UART_4_VECTOR                           49
+#define _UART_6_VECTOR                           50
+#define _UART_5_VECTOR                           51
+
+#define _TIMER_1_VECTOR                          4
+#define _TIMER_2_VECTOR                          8
+#define _TIMER_3_VECTOR                          12
+#define _TIMER_4_VECTOR                          16
+#define _TIMER_5_VECTOR                          20
+
+#define _RTCC_VECTOR                             35
     
 //=============================================================================
 // I2C Define
@@ -94,10 +113,12 @@ typedef struct {
 #define     I2C_SDA         TRISAbits.TRISA15
 
 // Interrupt
-#define     I2C_ICIP        IPC1bits.IC1IP
-#define     I2C_ICIS        IPC1bits.IC1IS
-#define     I2C_ICIF        IFS0bits.IC1IF
-#define     I2C_ICIE        IEC0bits.IC1IE
+#define     I2C_BIF         IFS0bits.I2C1BIF
+#define     I2C_MIF         IFS0bits.I2C1MIF
+#define     I2C_BIE         IEC0bits.I2C1BIE
+#define     I2C_MIE         IEC0bits.I2C1MIE
+#define     I2C_IP          IPC6bits.I2C1IP
+#define     I2C_IS          IPC6bits.I2C1IS
         
 #endif
 
@@ -145,10 +166,12 @@ typedef struct {
 #define     I2C_SDA         TRISFbits.TRISF2
 
 // Interrupt
-#define     I2C_ICIP        IPC3bits.IC3IP
-#define     I2C_ICIS        IPC3bits.IC3IS
-#define     I2C_ICIF        IFS0bits.IC3IF
-#define     I2C_ICIE        IEC0bits.IC3IE
+#define     I2C_BIF         IFS0bits.I2C3BIF
+#define     I2C_MIF         IFS0bits.I2C3MIF
+#define     I2C_BIE         IEC0bits.I2C3BIE
+#define     I2C_MIE         IEC0bits.I2C3MIE
+#define     I2C_IP          IPC6bits.I2C3IP
+#define     I2C_IS          IPC6bits.I2C3IS
 
 #endif
 
@@ -196,10 +219,12 @@ typedef struct {
 #define     I2C_SDA         TRISGbits.TRISG7
 
 // Interrupt
-#define     I2C_ICIP        IPC4bits.IC4IP
-#define     I2C_ICIS        IPC4bits.IC4IS
-#define     I2C_ICIF        IFS0bits.IC4IF
-#define     I2C_ICIE        IEC0bits.IC4IE
+#define     I2C_BIF         IFS1bits.I2C4BIF
+#define     I2C_MIF         IFS1bits.I2C4MIF
+#define     I2C_BIE         IEC1bits.I2C4BIE
+#define     I2C_MIE         IEC1bits.I2C4MIE
+#define     I2C_IP          IPC7bits.I2C4IP
+#define     I2C_IS          IPC7bits.I2C4IS
 
 #endif
 
@@ -247,10 +272,14 @@ typedef struct {
 #define     I2C_SDA         TRISFbits.TRISF4
 
 // Interrupt
-#define     I2C_ICIP        IPC5bits.IC5IP
-#define     I2C_ICIS        IPC5bits.IC5IS
-#define     I2C_ICIF        IFS0bits.IC5IF
-#define     I2C_ICIE        IEC0bits.IC5IE
+#define     I2C_BIF         IFS1bits.I2C5BIF
+#define     I2C_MIF         IFS1bits.I2C5MIF
+#define     I2C_BIE         IEC1bits.I2C5BIE
+#define     I2C_MIE         IEC1bits.I2C5MIE
+#define     I2C_IP          IPC8bits.I2C5IP
+#define     I2C_IS          IPC8bits.I2C5IS
+
+
 
 #endif
 

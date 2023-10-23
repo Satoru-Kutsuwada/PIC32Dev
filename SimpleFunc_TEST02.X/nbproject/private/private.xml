@@ -2,6 +2,9 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/D:/PIC32/PIC32Dev/SimpleFunc_TEST02.X/Source/vl53/usr_i2cMain.c</file>
+            <file>file:/D:/PIC32/PIC32Dev/SimpleFunc_TEST02.X/Source/usr_system.h</file>
+        </group>
     </open-files>
 </project-private>

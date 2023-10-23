@@ -43,17 +43,10 @@
         <itemPath>Source/FreeRTOS/queue.c</itemPath>
         <itemPath>Source/FreeRTOS/tasks.c</itemPath>
       </logicalFolder>
-      <logicalFolder name="f2" displayName="0 VL53" projectFiles="true">
-        <itemPath>Source/vl53/usr_i2cMain.c</itemPath>
-        <itemPath>Source/vl53/vl53l0x_api.c</itemPath>
-        <itemPath>Source/vl53/vl53l0x_api_calibration.c</itemPath>
-        <itemPath>Source/vl53/vl53l0x_api_core.c</itemPath>
-        <itemPath>Source/vl53/vl53l0x_api_strings.c</itemPath>
-        <itemPath>Source/vl53/vl53l0x_platform.c</itemPath>
-      </logicalFolder>
       <itemPath>Source/main.c</itemPath>
       <itemPath>Source/usr_tools.c</itemPath>
       <itemPath>Source/ConfigPerformance.c</itemPath>
+      <itemPath>Source/usr_timer.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -291,6 +284,7 @@
         <property key="debugoptions.debug-startup" value="Use system settings"/>
         <property key="debugoptions.reset-behaviour" value="Use system settings"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="true"/>

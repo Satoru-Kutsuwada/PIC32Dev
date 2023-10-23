@@ -67,13 +67,18 @@
 //=============================================================================
 // variable
 //=============================================================================
-QueueHandle_t xQueue;
-SemaphoreHandle_t Usrt_semaphore;
+QueueHandle_t usrMsgQueue;
+SemaphoreHandle_t usrMessage_sem;
 
 //=============================================================================
 // external variable
 //=============================================================================
-
+extern  uint8_t         usrT01Message_buf[];
+extern  uint8_t         usrT02Message_buf[];
+extern  USR_RTC_DATA    usrSRTC;
+extern  uint16_t        usrRTCflg;
+extern  USR_UARTx_BUF   usrUartxRx;
+extern  USR_UARTx_BUF   usrUartx485Rx;
 
 //=============================================================================
 // Prototype
@@ -81,19 +86,38 @@ SemaphoreHandle_t Usrt_semaphore;
 static void prvSetupHardware( void );
 
 void usrUART_Init(void);
-void putstring(uint8_t *string);
+void usrUART485_Init(void);
+void putstring(UART_KIND flg, uint8_t *string);
+
 void Xprintf(const char *string, ...);
+// void usrMessage_send(char *text,uint8_t *buffer);
+void usrMessage_send(uint8_t *msgbuffer, const char *string, ...);
 
-
+void usrInitTimer2(void);
+void Init_Timer(void);
+int getch_buf(USR_UARTx_BUF *buf);
+int getch485(void);
+  
 //=============================================================================
 //  vTask001
 //=============================================================================
 void vTask001(void *pvParameters) 
 {
+    uint8_t buf[2];
+    buf[1] = '\0';
+    
     Xprintf("vTask001()\r\n");
     vTaskDelay(100);
     while(1) {
-        vTaskDelay(250);
+        buf[0] = (uint8_t)getch_buf(&usrUartxRx);
+        if(buf[0] != 0 ){
+            usrMessage_send(usrT01Message_buf, buf);
+        }
+
+        if( usrRTCflg == 1 ){
+            usrRTCflg = 0;
+            usrMessage_send(usrT01Message_buf, "%d:%d:%d %d.%d\r\n", usrSRTC.hour, usrSRTC.min, usrSRTC.sec, usrSRTC.msec, usrSRTC.usec);
+        }
     }
 }
     
@@ -102,24 +126,60 @@ void vTask001(void *pvParameters)
 //=============================================================================
 void vTask002(void *pvParameters)
 {
+    uint8_t buf[2];
+    buf[1] = '\0';
+    
     Xprintf("vTask002()\r\n");
     vTaskDelay(100);
     while(1) {
-        vTaskDelay(250);
+        buf[0] = (uint8_t)getch_buf(&usrUartx485Rx);
+//        buf[0] = (uint8_t)getch485();
+        if(buf[0] != 0 ){
+            putstring(UART_FOR_485,buf);
+        }
+         
+         
+        //usrMessage_send( usrT02Message_buf,"TEST2=%d\r\n",12345 );
+       vTaskDelay(200);
     }
 }
        
 //=============================================================================
-//  vTask003
+//  vTask003 UART for debug message
 //=============================================================================
 void vTask003(void *pvParameters)
 {
+    PRINT_MSG_FORM  *pm_msg;
+    uint8_t			msgQueBuf[sizeof(void *)];
+    char            *print_mess;
+    char            temp[]="%p,%p\r\n";
+    UBaseType_t uxNumberOfItems;
+    
     Xprintf("vTask003()\r\n");
     vTaskDelay(100);
     while(1) {
-        vTaskDelay(250);
+                    
+        if(xQueueReceive(usrMsgQueue, msgQueBuf, portMAX_DELAY) == pdPASS ) {
+            //uxNumberOfItems = uxQueueMessagesWaiting(xQueue);
+            //Xprintf("uxNumberOfItems=%d\r\n",uxNumberOfItems);
+            //if( uxNumberOfItems > 0 ){
+                pm_msg = (PRINT_MSG_FORM *)msgQueBuf;
+                print_mess = (char *)pm_msg->malloc_pt;
+
+                Xprintf(print_mess);
+            //}
+            //else if( usrRTCflg == 1 ){
+            //    usrRTCflg = 0;
+            //    //Xprintf("%d:%d:%d %d.%d\r\n", usrSRTC.hour, usrSRTC.min, usrSRTC.sec, usrSRTC.msec, usrSRTC.usec);
+           // }
+        }
+        else{
+            Xprintf("Error vTask003\r\n\0");
+        }
     }
 }
+
+
 
 //=============================================================================
 //  main
@@ -137,36 +197,46 @@ int main( void )
     // UART
     //-----------------------------------------
     usrUART_Init();
-    putstring("********************\r\n");
-    putstring("***  USRT START  ***\r\n");
-    putstring("********************\r\n\r\n");
+    usrUART485_Init();
+    
+    putstring(UART_FOR_DEBUG,"********************\r\n");
+    putstring(UART_FOR_DEBUG,"***  USRT START  ***\r\n");
+    putstring(UART_FOR_DEBUG,"********************\r\n\r\n");
 
+    putstring(UART_FOR_485,"@@@@@@@@@@@@@@@@@@@@\r\n");
+    putstring(UART_FOR_485,"@@@  USRT START  @@@\r\n");
+    putstring(UART_FOR_485,"@@@@@@@@@@@@@@@@@@@@\r\n\r\n");
+
+    
+    Init_Timer();
+    usrInitTimer2();
+    
     //-----------------------------------------
     // xSemaphoreCreateBinary
     //-----------------------------------------
-    Usrt_semaphore = xSemaphoreCreateBinary();
+    usrMessage_sem = xSemaphoreCreateBinary();
 
-    Xprintf("Usrt_semaphore=0x%p\r\n",Usrt_semaphore);
-    if(Usrt_semaphore != NULL){
-        Status = xSemaphoreGive(Usrt_semaphore);
+    Xprintf("usrMessage_sem=0x%p\r\n",usrMessage_sem);
+    if(usrMessage_sem != NULL){
+        Status = xSemaphoreGive(usrMessage_sem);
         Xprintf("xSemaphoreGive()=%d\r\n",Status);
     }
 
     //-----------------------------------------
     // xQueueCreate
     //-----------------------------------------
-    xQueue = xQueueCreate(QUEUE_LENGTH, sizeof(void *));  
-    Xprintf("xQueue=0x%p\r\n",xQueue);
+    usrMsgQueue = xQueueCreate(QUEUE_LENGTH, sizeof(void *));  
+    Xprintf("usrMsgQueue=0x%p\r\n",usrMsgQueue);
 
     
     //-----------------------------------------
     // xTaskCreate
     //-----------------------------------------
-    Status = xTaskCreate(vTask001, "U01", configMINIMAL_STACK_SIZE + 10, NULL, 3, NULL);
+    Status = xTaskCreate(vTask001, "U01", configMINIMAL_STACK_SIZE + 10, NULL, 1, NULL);
     Xprintf("xTaskCreate(Task01)=%d\r\n",Status);
     Status = xTaskCreate(vTask002, "U02", configMINIMAL_STACK_SIZE + 10, NULL, 2, NULL);
     Xprintf("xTaskCreate(Task02)=%d\r\n",Status);
-    Status = xTaskCreate(vTask003, "U03", configMINIMAL_STACK_SIZE + 10, NULL, 1, NULL);
+    Status = xTaskCreate(vTask003, "U03", configMINIMAL_STACK_SIZE + 10, NULL, 3, NULL);
     Xprintf("xTaskCreate(Task03)=%d\r\n",Status);
 
     //-----------------------------------------
