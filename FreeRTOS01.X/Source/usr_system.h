@@ -59,8 +59,8 @@ typedef struct {
         
 typedef struct{
     uint8_t     buf[USRTx_RX_BUF];
-    uint16_t    wpt;
-    uint16_t    rpt;
+    int         wpt;
+    int         rpt;
     uint16_t    status;    
 } USR_UARTx_BUF;
 
@@ -360,6 +360,7 @@ typedef enum{
 
 // PORT
 #define	UART485_RXPORT	TRISDbits.TRISD2
+#define UART485_CTRL    LATBbits.LATB1;    
     
 		
 //	Flag	
@@ -407,6 +408,8 @@ typedef enum{
 
 // PORT
 #define	UART485_RXPORT	TRISFbits.TRISF5
+#define UART485_CTRL    LATBbits.LATB1;    
+
     
 		
 //	Flag	
@@ -454,6 +457,7 @@ typedef enum{
 
 // PORT
 #define	UART485_RXPORT	TRISGbits.TRISG7
+#define UART485_CTRL    LATBbits.LATB1;    
     
 		
 //	Flag	
@@ -507,6 +511,7 @@ typedef enum{
 
 // PORT
 #define	UART485_RXPORT	TRISBbits.TRISB8
+#define UART485_CTRL    LATBbits.LATB1;    
     
 //	Flag	
 #define	UART485_EIF    IFS2bits.U5EIF
@@ -554,6 +559,7 @@ typedef enum{
 
 // PORT
 #define	UART485_RXPORT	TRISGbits.TRISG9
+#define UART485_CTRL    LATBbits.LATB1;    
     
 		
 //	Flag	
@@ -573,10 +579,9 @@ typedef enum{
 // VECTOR
 
 #endif
-        
-        
-        
-        
+
+
+
 
 
 #ifdef	__cplusplus

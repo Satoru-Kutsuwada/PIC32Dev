@@ -62,13 +62,17 @@
 //=============================================================================
 // define
 //=============================================================================
-#define QUEUE_LENGTH 4
+#define USR_MSG_QUEUE_LENGTH                4
+#define USR_RS485_QUEUE_LENGTH              10
+        
 
 //=============================================================================
 // variable
 //=============================================================================
-QueueHandle_t usrMsgQueue;
-SemaphoreHandle_t usrMessage_sem;
+QueueHandle_t       usrMsgQueue;
+QueueHandle_t       usrRs485Queue;
+
+SemaphoreHandle_t   usrMessage_sem;
 
 //=============================================================================
 // external variable
@@ -97,7 +101,8 @@ void usrInitTimer2(void);
 void Init_Timer(void);
 int getch_buf(USR_UARTx_BUF *buf);
 int getch485(void);
-  
+void rs485_com_task(void);
+       
 //=============================================================================
 //  vTask001
 //=============================================================================
@@ -126,21 +131,26 @@ void vTask001(void *pvParameters)
 //=============================================================================
 void vTask002(void *pvParameters)
 {
+#ifdef ___NOP
     uint8_t buf[2];
     buf[1] = '\0';
+#endif
     
     Xprintf("vTask002()\r\n");
     vTaskDelay(100);
     while(1) {
+
+#ifdef ___NOP
         buf[0] = (uint8_t)getch_buf(&usrUartx485Rx);
 //        buf[0] = (uint8_t)getch485();
         if(buf[0] != 0 ){
             putstring(UART_FOR_485,buf);
         }
-         
-         
         //usrMessage_send( usrT02Message_buf,"TEST2=%d\r\n",12345 );
        vTaskDelay(200);
+#endif
+       rs485_com_task();
+
     }
 }
        
@@ -225,8 +235,11 @@ int main( void )
     //-----------------------------------------
     // xQueueCreate
     //-----------------------------------------
-    usrMsgQueue = xQueueCreate(QUEUE_LENGTH, sizeof(void *));  
+    usrMsgQueue = xQueueCreate(USR_MSG_QUEUE_LENGTH, sizeof(void *));  
     Xprintf("usrMsgQueue=0x%p\r\n",usrMsgQueue);
+
+    usrRs485Queue = xQueueCreate(USR_RS485_QUEUE_LENGTH, sizeof(void *));  
+    Xprintf("usrRs485Queue=0x%p\r\n",usrRs485Queue);
 
     
     //-----------------------------------------
