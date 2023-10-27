@@ -5,6 +5,9 @@
         <group>
             <file>file:/D:/PIC32/PIC32Dev/SimpleFunc_TEST02.X/Source/vl53/usr_i2cMain.c</file>
             <file>file:/D:/PIC32/PIC32Dev/SimpleFunc_TEST02.X/Source/usr_system.h</file>
+            <file>file:/D:/PIC32/PIC32Dev/SimpleFunc_TEST02.X/Source/vl53/vl53l0x_api.c</file>
+            <file>file:/D:/PIC32/PIC32Dev/SimpleFunc_TEST02.X/Source/main.c</file>
+            <file>file:/D:/PIC32/PIC32Dev/SimpleFunc_TEST02.X/Source/vl53/usr_vl53_main.c</file>
         </group>
     </open-files>
 </project-private>
