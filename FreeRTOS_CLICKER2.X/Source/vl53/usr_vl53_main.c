@@ -47,7 +47,7 @@ uint16_t        usrRasingMode2;
 //==============================================================================
 // Extern Variable
 //==============================================================================
-
+extern      USR_RTC_DATA        usrSRTC;
 //==============================================================================
 // prototypes
 //==============================================================================
@@ -85,15 +85,16 @@ void vTask001(void *pvParameters)
     while(1) {
 
                  Status = VL53L0X_PerformSingleRangingMeasurement(Dev, &RangingMeasurementData);
-                Xprintf("Range MilliMeter = %d(%d),",RangingMeasurementData.RangeMilliMeter,Dev->Data.LastRangeMeasure.RangeMilliMeter);
+      //          Xprintf("Range MilliMeter = %d(%d),\r\n",RangingMeasurementData.RangeMilliMeter,Dev->Data.LastRangeMeasure.RangeMilliMeter);
+                Xprintf("%d %d.%d Range = %d\r\n",usrSRTC.sec, usrSRTC.msec, usrSRTC.usec, RangingMeasurementData.RangeMilliMeter);
 
+#ifdef ___NOP
                 print_pal_error(Status);
                 print_range_status(&RangingMeasurementData);
 
                 VL53L0X_GetLimitCheckCurrent(Dev, VL53L0X_CHECKENABLE_RANGE_IGNORE_THRESHOLD, &LimitCheckCurrent);
                 Xprintf(",RANGE IGNORE THRESHOLD: %f\r\n", (float)LimitCheckCurrent/65536.0);
-
-
+#endif
     }
 }
 
