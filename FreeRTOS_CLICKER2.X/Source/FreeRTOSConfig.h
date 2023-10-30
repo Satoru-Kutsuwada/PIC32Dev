@@ -53,7 +53,8 @@
 
 #define configMAX_PRIORITIES					( 4UL )
 #define configMINIMAL_STACK_SIZE				( 190 )
-#define configISR_STACK_SIZE					( 250 )
+//#define configISR_STACK_SIZE					( 250 )
+#define configISR_STACK_SIZE					( 1024 )
 //#define configTOTAL_HEAP_SIZE					( ( size_t ) 28000 )
 #define configTOTAL_HEAP_SIZE					( ( size_t ) 10000 )
 #define configMAX_TASK_NAME_LEN					( 4 )

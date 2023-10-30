@@ -18,7 +18,7 @@
 #define I2C_SEND_ACK  0 
 #define I2C_SEND_NACK 1 
 
-uint16_t usrLogSW_I2C = 0;
+uint16_t usrLogSW_I2C = 1;
 
 #define LOG_PRINT_I2C(...)                                                      \
 {                                                                               \
@@ -112,7 +112,13 @@ uint16_t Get_Timer(int sel);
  ********************************************************************/
 void i2c_init(void)
 {
-    
+
+    I2C_CON = 0;
+    I2C_STAT = 0;
+    I2C_ADD = 0;
+    I2C_MSK = 0;
+
+
     // Fpb = 40Mhz, Fsk = 400kHz
     I2C_DISSLW = 0;
     I2C_BRG = 0x002F;
@@ -135,13 +141,18 @@ void i2c_init(void)
     I2C_ON = 1;
     
     
+    
+    Xprintf("I2C CON=%p, STAT=%x\r\n",I2C_CON,I2C_STAT);
+    
+    
+    
 }
 
 
 //=============================================================================
 //
 //=============================================================================
-uint8_t i2c_CheckIdleWait(uint8_t mask)
+uint8_t i2c_CheckIdleWait(uint8_t mask,uint16_t line)
 {
     uint8_t status;
     int index;
@@ -159,7 +170,7 @@ uint8_t i2c_CheckIdleWait(uint8_t mask)
 
         
         if( Get_Timer(index) == 0 ){
-            Xprintf( "ERR(TOUT:line%d): CheckIdle CON=%p, STAT=%x\r\n", __LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT );
+            Xprintf( "ERR(TOUT:line%d): CheckIdle CON=%p, STAT=%x\r\n", line, (uint32_t)I2C_CON,(uint16_t)I2C_STAT );
             i2c_data.error = I2C_ERR_STAT_TIMEOUT;        
             status = STATUS_FAIL;    
             break;   
@@ -180,12 +191,12 @@ uint8_t i2c_start(void)
     status = STATUS_OK ;    
     I2C_BCL  = 0;
     
-    status = i2c_CheckIdleWait(0x05);
+    status = i2c_CheckIdleWait(0x05, __LINE__);
 
     if( status == STATUS_OK ){
         
-       // LOG_PRINT_I2C( "i2c_start(line %d) ",__LINE__);
-        //LOG_PRINT_I2C( " CON=%p, STAT=%x, BRG=%x\r\n", (uint32_t)I2C_CON,(uint16_t)I2C_STAT,(uint16_t)I2C_BRG );
+       LOG_PRINT_I2C( "i2c_start(line %d) ",__LINE__);
+       LOG_PRINT_I2C( " CON=%p, STAT=%x, BRG=%x, IFS1=%p\r\n", (uint32_t)I2C_CON,(uint16_t)I2C_STAT,(uint16_t)I2C_BRG ,(uint32_t)IFS1 );
         
         
 
@@ -194,33 +205,36 @@ uint8_t i2c_start(void)
 
 
         I2C_SEN = 1;
+        LOG_PRINT_I2C( "  ON(SEN) CON=%p, STAT=%x, IFS1=%p\r\n", (uint32_t)I2C_CON,(uint16_t)I2C_STAT,(uint32_t)IFS1 );
 
         index = Set_Timer(100);
         while( I2C_SEN == 1 ){
-            if(I2C_BCL ){
-                Xprintf("  ERR(BCL:line%d) CON=%p, STAT=%x\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT );
+//        while( I2C_MIF == 0 ) {
+            if( I2C_BCL ){
+                Xprintf("  ERR(BCL:line%d) CON=%p, STAT=%x IFS1=%p\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT, (uint32_t)IFS1 );
                 i2c_data.error = I2C_ERR_STAT_BCL;      
                 status = STATUS_FAIL;    
+                break;   
             }
             if(I2C_IWCOL){
-                Xprintf( "  ERR(WCOL:line%d) CON=%p, STAT=%x\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT );
+                Xprintf( "  ERR(WCOL:line%d) CON=%p, STAT=%x IFS1=%p\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT, (uint32_t)IFS1 );
                 I2C_IWCOL = 0;
                 i2c_data.error = I2C_ERR_STAT_WCOL;        
                 status = STATUS_FAIL;    
-                break         ;   
+                break;   
             }
             if( Get_Timer(index) == 0 ){
-                Xprintf("  ERR(TOUT:line%d) CON=%p, STAT=%x\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT );
+                Xprintf("  ERR(TOUT:line%d) CON=%p, STAT=%x IFS1=%p\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT, (uint32_t)IFS1 );
                 i2c_data.error = I2C_ERR_STAT_TIMEOUT;        
                 status = STATUS_FAIL;    
-                break         ;   
+                break;   
             }
         }
         Rel_Timer(index);
     }     
 
     if( status == STATUS_OK ){    
-        LOG_PRINT_I2C( "  _end(line %d) CON=%p, STAT=%x\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT );
+        LOG_PRINT_I2C( "  _end(line %d) CON=%p, STAT=%x IFS1=%p\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT, (uint32_t)IFS1 );
     }
         
     return  status;
@@ -237,32 +251,36 @@ uint8_t i2c_stop(void)
     status = STATUS_OK ;    
     I2C_BCL  = 0;
 
-    status = i2c_CheckIdleWait(0x05);
+    status = i2c_CheckIdleWait(0x05, __LINE__);
 
     if( status == STATUS_OK ){
-        LOG_PRINT_I2C( "i2c_stop(line %d) CON=%p, STAT=%x\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT );
+        LOG_PRINT_I2C( "i2c_stop(line %d) CON=%p, STAT=%x IFS1=%p\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT, (uint32_t)IFS1 );
 
         I2C_BIF = 0;
         I2C_MIF = 0;
 
         I2C_PEN = 1;
+        LOG_PRINT_I2C( "  ON(PEN) CON=%p, STAT=%x, IFS1=%p\r\n", (uint32_t)I2C_CON,(uint16_t)I2C_STAT,(uint32_t)IFS1 );
 
         index = Set_Timer(100);
-        while( I2C_PEN  ){
+//        while( I2C_PEN  ){
+        while( I2C_MIF == 0 ) {
             if(I2C_BCL ){
-                Xprintf("  ERR(BCL:line%d) CON=%p, STAT=%x\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT );
+                Xprintf("  ERR(BCL:line%d) CON=%p, STAT=%x IFS1=%p\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT, (uint32_t)IFS1 );
                 i2c_data.error = I2C_ERR_STAT_BCL;      
                 status = STATUS_FAIL;    
+                break;   
+
             }
             if(I2C_IWCOL){
-                Xprintf( "  ERR(WCOL:line%d) CON=%p, STAT=%x\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT );
+                Xprintf( "  ERR(WCOL:line%d) CON=%p, STAT=%x IFS1=%p\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT, (uint32_t)IFS1 );
                 I2C_IWCOL = 0;
                 i2c_data.error = I2C_ERR_STAT_WCOL;        
                 status = STATUS_FAIL;    
                 break;           
             }
             if( Get_Timer(index) == 0 ){
-                Xprintf("  ERR(TOUT:line%d) CON=%p, STAT=%x\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT );
+                Xprintf("  ERR(TOUT:line%d) CON=%p, STAT=%x IFS1=%p\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT, (uint32_t)IFS1 );
                 i2c_data.error = I2C_ERR_STAT_TIMEOUT;        
                 status = STATUS_FAIL;    
                 break;   
@@ -272,7 +290,7 @@ uint8_t i2c_stop(void)
     }
 
     if( status == STATUS_OK ){    
-        LOG_PRINT_I2C( "  _end(%p,%x) \r\n",(uint32_t)I2C_CON,(uint16_t)I2C_STAT);
+        LOG_PRINT_I2C( "  _end(CON=%p, STAT=%x IFS1=%p)\r\n",(uint32_t)I2C_CON,(uint16_t)I2C_STAT, (uint32_t)IFS1 );
     }
 
     return  status;
@@ -290,11 +308,11 @@ uint8_t i2c_write( uint8_t dt )
     status = STATUS_OK ;    
     I2C_BCL  = 0;
 
-    status = i2c_CheckIdleWait(0x05);
+    status = i2c_CheckIdleWait(0x05, __LINE__);
 
     if( status == STATUS_OK ){
         if( i2c_data.status < I2C_STAT_MAX ){
-            LOG_PRINT_I2C( "i2c_write(line%d) CON=%p, STAT=%x\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT );
+            LOG_PRINT_I2C( "i2c_write(line%d) dt=0x%x,CON=%p, STAT=%x\r\n",__LINE__, dt, (uint32_t)I2C_CON,(uint16_t)I2C_STAT );
         }
         else{
             LOG_PRINT_I2C("  ERROR STATUS = %d\r\n",i2c_data.status);
@@ -303,24 +321,27 @@ uint8_t i2c_write( uint8_t dt )
         I2C_MIF = 0;
 
         I2C_TRN = dt;
+        LOG_PRINT_I2C( "  TRN<-%x  CON=%p, STAT=%x, IFS1=%p\r\n",dt, (uint32_t)I2C_CON,(uint16_t)I2C_STAT,(uint32_t)IFS1 );
 
         index = Set_Timer(100);
-        LOG_PRINT_I2C("  Set_Timer(line%d) %d.%d msec\r\n",__LINE__, usrSRTC.msec, usrSRTC.usec);
-        while( I2C_TRSTAT ||  I2C_TBF ) {
+        //LOG_PRINT_I2C("  Set_Timer(line%d) %d.%d msec\r\n",__LINE__, usrSRTC.msec, usrSRTC.usec);
+ //       while( I2C_TRSTAT ||  I2C_TBF ) {
+        while( I2C_MIF == 0 ) {
+            
             if(I2C_BCL ){
-                Xprintf("  ERR(BCL:line%d) CON=%p, STAT=%x\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT );
+                Xprintf("  ERR(BCL:line%d) CON=%p, STAT=%x IFS1=%p\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT, (uint32_t)IFS1 );
                 i2c_data.error = I2C_ERR_STAT_BCL;      
                 status = STATUS_FAIL;    
             }
             if(I2C_IWCOL){
-                Xprintf( "  ERR(WCOL:line%d) CON=%p, STAT=%x\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT );
+                Xprintf( "  ERR(WCOL:line%d) CON=%p, STAT=%x IFS1=%p\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT, (uint32_t)IFS1 );
                 I2C_IWCOL = 0;
                 i2c_data.error = I2C_ERR_STAT_WCOL;        
                 status = STATUS_FAIL;    
                 break;           
             }
             if( Get_Timer(index) == 0 ){
-                LOG_PRINT_I2C("  ERR(TOUT:line%d) CON=%p, STAT=%x %d.%d msec\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT , usrSRTC.msec, usrSRTC.usec);
+                LOG_PRINT_I2C("  ERR(TOUT:line%d) CON=%p, STAT=%x IFS1=%p\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT, (uint32_t)IFS1 );
                 i2c_data.error = I2C_ERR_STAT_TIMEOUT;        
                 status = STATUS_FAIL;    
                 break;   
@@ -330,12 +351,12 @@ uint8_t i2c_write( uint8_t dt )
     
         if( status == STATUS_OK ){
             if( I2C_ACKSTAT ){
-                LOG_PRINT_I2C( " ERR(NACK:line%d) CON=%p, STAT=%x\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT );
+                LOG_PRINT_I2C( " ERR(NACK:line%d) CON=%p, STAT=%x IFS1=%p\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT, (uint32_t)IFS1 );
                 i2c_data.error = I2C_ERR_STAT_NACK;
                 status = STATUS_FAIL;    
             }
             else{
-                LOG_PRINT_I2C( "  _end(WRITE ACK line %d) CON=%p, STAT=%x\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT );
+                LOG_PRINT_I2C( "  _end(WRITE ACK line %d) CON=%p, STAT=%x IFS1=%p\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT, (uint32_t)IFS1 );
             }
         }
     }
@@ -354,7 +375,7 @@ uint8_t i2c_read( uint8_t acknNak, uint8_t *dt )
     status = STATUS_OK ;    
     I2C_BCL  = 0;
 
-    status = i2c_CheckIdleWait(0x05);
+    status = i2c_CheckIdleWait(0x05, __LINE__);
 
     if( status == STATUS_OK ){
         LOG_PRINT_I2C( "i2c_read(line %d) CON=%p, STAT=%x\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT );
@@ -363,23 +384,25 @@ uint8_t i2c_read( uint8_t acknNak, uint8_t *dt )
         I2C_MIF = 0;
 
         I2C_RCEN   = 1;
+        LOG_PRINT_I2C( "  ON(RCEN) CON=%p, STAT=%x, IFS1=%p\r\n", (uint32_t)I2C_CON,(uint16_t)I2C_STAT,(uint32_t)IFS1 );
 
         index = Set_Timer(100);
-        while( I2C_RCEN ){
+//        while( I2C_RCEN ){
+        while( I2C_MIF == 0 ){
             if(I2C_BCL ){
-                Xprintf("  ERR(BCL:line%d) CON=%p, STAT=%x\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT );
+                Xprintf("  ERR(BCL:line%d) CON=%p, STAT=%x IFS1=%p\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT, (uint32_t)IFS1 );
                 i2c_data.error = I2C_ERR_STAT_BCL;      
                 status = STATUS_FAIL;    
             }
             if(I2C_IWCOL){
-                Xprintf( "  ERR(WCOL:line%d) CON=%p, STAT=%x\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT );
+                Xprintf( "  ERR(WCOL:line%d) CON=%p, STAT=%x IFS1=%p\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT, (uint32_t)IFS1 );
                 I2C_IWCOL = 0;
                 i2c_data.error = I2C_ERR_STAT_WCOL;        
                 status = STATUS_FAIL;    
                 break;           
             }
             if( Get_Timer(index) == 0 ){
-                Xprintf("  ERR(TOUT:line%d) CON=%p, STAT=%x\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT );
+                Xprintf("  ERR(TOUT:line%d) CON=%p, STAT=%x IFS1=%p\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT, (uint32_t)IFS1 );
                 i2c_data.error = I2C_ERR_STAT_TIMEOUT;        
                 status = STATUS_FAIL;    
                 break;   
@@ -390,14 +413,15 @@ uint8_t i2c_read( uint8_t acknNak, uint8_t *dt )
     
     if( status == STATUS_OK ){
         *dt = I2C_RCV;
+        LOG_PRINT_I2C( "  dt<-RCV(%x) CON=%p, STAT=%x, IFS1=%p\r\n",*dt,  (uint32_t)I2C_CON,(uint16_t)I2C_STAT,(uint32_t)IFS1 );
     
-        status = i2c_CheckIdleWait(0x05);
+        status = i2c_CheckIdleWait(0x05, __LINE__);
 
         if( status == STATUS_OK ){
             I2C_ACKDT = acknNak ;        // ACKデータのセット
             I2C_ACKEN = 1 ;          // ACKデータを返す
         }
-        LOG_PRINT_I2C( "  _end(line %d) CON=%p, STAT=%x\r\n",__LINE__, (uint32_t)I2C_CON,(uint16_t)I2C_STAT );
+        LOG_PRINT_I2C( "  _end(line %d)dt=0x%x, CON=%p, STAT=%x IFS1=%p\r\n",__LINE__,*dt,  (uint32_t)I2C_CON,(uint16_t)I2C_STAT, (uint32_t)IFS1 );
     }
 
     return  status;

@@ -373,12 +373,11 @@ VL53L0X_Error VL53L0X_PollingDelay(VL53L0X_DEV Dev)
 {
     VL53L0X_Error status = VL53L0X_ERROR_NONE;
 
-    // do nothing
-    VL53L0X_OsDelay();
+    // 1msec Wait
+    vTaskDelay(1);  
     return status;
 }
 #ifdef ___NOP2
-#endif
 //======================================================================
 //
 //======================================================================
@@ -390,3 +389,5 @@ void VL53L0X_OsDelay(void)
         
     }
 }
+#endif
+

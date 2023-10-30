@@ -25,14 +25,10 @@
 //=============================================================================
 const char ConvC[]= { '0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f' };
 
-#define     MESG_BUF_MAX    30
-uint8_t     usrT01Message_buf[MESG_BUF_MAX];
-uint8_t     usrT02Message_buf[MESG_BUF_MAX];
-
-
 USR_UARTx_BUF    usrUartxRx;
 USR_UARTx_BUF    usrUartx485Rx;
 
+PRINT_MSG_COMMAND   usr_msg_command;
 
 //=============================================================================
 // external variable
@@ -48,6 +44,10 @@ void putch(unsigned char c);
 void putstring(UART_KIND flg, uint8_t *string);
 void Xprintf(const char *string, ...);
 int getch_buf(USR_UARTx_BUF *buf);
+
+void usrUartRxEventISR(void);
+void debu_main(void);
+
        
 //=============================================================================
 //  vTask003 UART for debug message
@@ -56,45 +56,40 @@ void vTask003(void *pvParameters)
 {
     PRINT_MSG_FORM  *pm_msg;
     uint8_t			msgQueBuf[sizeof(void *)];
-    char            *print_mess;
+    MESSAGE_DATA    *print_mess;
     char            temp[]="%p,%p\r\n";
     UBaseType_t uxNumberOfItems;
+    uint8_t         ch;
     
     Xprintf("vTask003()\r\n");
     vTaskDelay(100);
     while(1) {
                     
         if(xQueueReceive(usrMsgQueue, msgQueBuf, portMAX_DELAY) == pdPASS ) {
-            //uxNumberOfItems = uxQueueMessagesWaiting(xQueue);
-            //Xprintf("uxNumberOfItems=%d\r\n",uxNumberOfItems);
-            //if( uxNumberOfItems > 0 ){
-                pm_msg = (PRINT_MSG_FORM *)msgQueBuf;
-                print_mess = (char *)pm_msg->malloc_pt;
-
-                Xprintf(print_mess);
-            //}
-            //else if( usrRTCflg == 1 ){
-            //    usrRTCflg = 0;
-            //    //Xprintf("%d:%d:%d %d.%d\r\n", usrSRTC.hour, usrSRTC.min, usrSRTC.sec, usrSRTC.msec, usrSRTC.usec);
-           // }
+            Xprintf("usrMsgQueue \r\n");
+            pm_msg = (PRINT_MSG_FORM *)msgQueBuf;
+            
+            Xprintf("pm_msg->malloc_pt=%p\r\n",pm_msg->malloc_pt);
+            Xprintf("pm_msg->command=%d\r\n",pm_msg->command);
+            
+            
+            switch(pm_msg->command){
+            case PM_COM_MESSAGE:
+                print_mess = (MESSAGE_DATA *)pm_msg->malloc_pt;
+                
+                Xprintf( &print_mess->buf[0]) ;
+                break;
+            case PM_COM_UART_RX:
+                debu_main();
+                break;
+            default:
+                break;
+            }
         }
         else{
             Xprintf("Error vTask003\r\n\0");
         }
 
-#ifdef ___NOP        
-        buf[0] = (uint8_t)getch_buf(&usrUartxRx);
-        if(buf[0] != 0 ){
-            usrMessage_send(usrT01Message_buf, buf);
-        }
-
-        if( usrRTCflg == 1 ){
-            usrRTCflg = 0;
-            usrMessage_send(usrT01Message_buf, "%d:%d:%d %d.%d\r\n", usrSRTC.hour, usrSRTC.min, usrSRTC.sec, usrSRTC.msec, usrSRTC.usec);
-        }
-#endif
-        
-                
     }
 }
 
@@ -166,6 +161,7 @@ int getch485(void)
 //==============================================================================
 //
 //==============================================================================
+
 int getch_buf(USR_UARTx_BUF *buf)
 {
     int rxdata = 0;
@@ -180,7 +176,7 @@ int getch_buf(USR_UARTx_BUF *buf)
     }
     return (int) rxdata; // 受信データを返す
 }
-
+PRINT_MSG_FORM  usrPM_msg;
 //=============================================================================
 // UART RX interrupt 
 //=============================================================================
@@ -190,7 +186,10 @@ int getch_buf(USR_UARTx_BUF *buf)
 #pragma interrupt ISR_UartRx IPL7AUTO
 void ISR_UartRx(void) 
 {
-    UART_RXIF = 0;
+    BaseType_t      xHigherPriorityTaskWoken;
+    
+    BaseType_t      Status;
+
 
     while( UART_URXDA ){
         usrUartxRx.buf[usrUartxRx.wpt] = UART_RXREG;
@@ -203,6 +202,32 @@ void ISR_UartRx(void)
             usrUartxRx.status = USR_UARTx_ERR_OVERRUN;
         }
     }
+    
+    // usrUartRxEventISR();
+  
+    xHigherPriorityTaskWoken = pdFALSE;
+    
+    usr_msg_command = PM_COM_UART_RX;
+    usrPM_msg.malloc_pt = (void *)&usr_msg_command;
+    usrPM_msg.command = PM_COM_UART_RX;
+
+    Yprintf("pre \r\n",0);
+#ifdef ___NOP
+    Status = xQueueSendFromISR(usrMsgQueue, (void *)&usrPM_msg, &xHigherPriorityTaskWoken);
+
+    Yprintf("xQueueSendFromISR = %x\r\n",Status);
+    if( xHigherPriorityTaskWoken ) { 
+        /* Actual macro used here is port specific. */  
+        portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
+        //taskYIELD_FROM_ISR (); 
+    } 
+    
+#endif
+    
+    Yprintf("after \r\n",0);
+    
+    UART_RXIF = 0;
+    
 }
  
 //=============================================================================
@@ -332,10 +357,11 @@ const uint32_t usrBaundRate_BRG = ( (usrPERIPHERAL_CLOCK_HZ / usrBAUNRATE ) / 4 
 //
 //==============================================================================
 
-uint8_t *my_putint(int num, uint8_t *buf)
+uint8_t *my_putint(int num, int keta_req, uint8_t *buf)
 {
-    int temp;
-    int keta;
+    int     temp;
+    int     keta;
+    int     i;
     
 
 	if (num < 0) {
@@ -345,14 +371,24 @@ uint8_t *my_putint(int num, uint8_t *buf)
     }
     temp = num;
     keta = 1;
-    
+    keta_req --;
 
     while (num / 10 != 0) {
         num = num / 10;
         keta *= 10;
+        keta_req --;
     }
     num = temp;
 
+    if( keta_req > 0){
+        for(i=0; i< keta_req; i++){
+            //*buf = '0';
+            *buf = ' ';
+            buf++;
+        }
+    }
+    
+    
     for( ; keta>0; keta/=10 ){
         num = num / keta;
         *buf = '0' + num;
@@ -377,7 +413,7 @@ uint8_t *my_putfloat(double num, int precision, uint8_t *buf)
     int count;
 
 	intPart = (int)num;
-    buf = my_putint(intPart, buf);
+    buf = my_putint(intPart,0, buf);
     *buf = '.';
     buf ++;
 
@@ -544,15 +580,10 @@ void debu_uint2a(uint8_t ch,uint16_t dt)
 //=============================================================================
 void Xprintf(const char *string, ...)
 {
-	va_list     ap;
-	uint8_t        *buffer,*Malloc_buf;
+	va_list         ap;
+	uint8_t         *buffer,*Malloc_buf;
+	uint8_t         temp;
 
-    //int         intvalue;
-    //char        *charvalue;
-    //char        ch;
-    //uint16_t    uintvalue;
-    //long    uint32value;
-    //double      floatvalue;
 
     Malloc_buf = ( uint8_t * ) pvPortMalloc( sizeof( uint8_t )*XPRINT_BUF_SIZE );
     
@@ -566,34 +597,46 @@ void Xprintf(const char *string, ...)
             if (*string == '%') {
                 string++; // Move past '%'
                 switch (*string ){
+                    case  '2':
+                    case  '3':
+                    case  '4':
+                    case  '5':
+                    case  '6':
+                    case  '7':
+                    case  '8':
+                        temp =  *string;
+                        string++; // Move past '%'
+                        switch (*string ){
+                            case  'd':
+                                buffer = my_putint((int)va_arg(ap, int), temp-'0', buffer);
+                                break;
+                            case  'f':
+                            case  'x':
+                            case  'p':
+                            default:
+                                buffer = my_putchar('%', buffer );
+                                buffer = my_putchar(temp, buffer );
+                                buffer = my_putchar(*string, buffer );
+                                break;
+                        }
+
+                        break;
                     case  'c':
-                        // ch = va_arg(ap, char);
                         buffer = my_putchar((char)va_arg(ap, int), buffer );
                         break;
                     case  'd':
-                        //intvalue = va_arg(ap, int);
-                        //printf("intvaluee=%d\r\n",intvalue);
-                        buffer = my_putint((int)va_arg(ap, int), buffer);
+                        buffer = my_putint((int)va_arg(ap, int), 0, buffer);
                         break;
                     case  'f':
-                        //floatvalue = va_arg(ap, double);
                         buffer = my_putfloat((double)va_arg(ap, double), 2, buffer );
                         break;
                     case  's':
-                        //charvalue = va_arg(ap, char*);
                         buffer = my_puts((char *)va_arg(ap, char*), buffer );
                         break;
                     case  'x':
-                        //uintvalue = (uint16_t)va_arg(ap, int);
-                        //printf("uintvalue=%x\r\n",uintvalue);
                         buffer = my_putshex((uint16_t)va_arg(ap, int), 0, buffer );
                         break;
                     case  'p':
-                        //uint32value = (long)va_arg(ap, long);
-                        //uintvalue = (uint16_t)(uint32value >> 16);
-                        //debu_uint2a('@',uintvalue);
-                        //uintvalue = (uint16_t)uint32value;
-                        //debu_uint2a('*',uintvalue);
                         buffer = my_putshex32((long)va_arg(ap, long),  buffer );
                         break;
                     default:
@@ -695,6 +738,30 @@ void usrMessage_send(char *text,uint8_t *buffer)
 #endif
 
 
+//=============================================================================
+//
+//=============================================================================
+void usrUartRxEventISR(void)
+{   
+    BaseType_t      xHigherPriorityTaskWoken;
+    PRINT_MSG_FORM  pm_msg;
+    BaseType_t      Status;
+  
+    xHigherPriorityTaskWoken = pdFALSE;
+    
+    usr_msg_command = PM_COM_UART_RX;
+    pm_msg.malloc_pt = (void *)&usr_msg_command;
+    pm_msg.command = PM_COM_UART_RX;
+
+    Status = xQueueSendFromISR(usrMsgQueue, (void *)&pm_msg, &xHigherPriorityTaskWoken);
+    portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
+    
+}
+
+
+//=============================================================================
+//
+//=============================================================================
 void usrMessage_send(uint8_t *msgbuffer, const char *string, ...)
 {
     va_list         ap;
@@ -713,33 +780,21 @@ void usrMessage_send(uint8_t *msgbuffer, const char *string, ...)
                 string++; // Move past '%'
                 switch (*string ){
                     case  'c':
-                        // ch = va_arg(ap, char);
                         buffer = my_putchar((char)va_arg(ap, int), buffer );
                         break;
                     case  'd':
-                        //intvalue = va_arg(ap, int);
-                        //printf("intvaluee=%d\r\n",intvalue);
-                        buffer = my_putint((int)va_arg(ap, int), buffer);
+                        buffer = my_putint((int)va_arg(ap, int), 0, buffer);
                         break;
                     case  'f':
-                        //floatvalue = va_arg(ap, double);
                         buffer = my_putfloat((double)va_arg(ap, double), 2, buffer );
                         break;
                     case  's':
-                        //charvalue = va_arg(ap, char*);
                         buffer = my_puts((char *)va_arg(ap, char*), buffer );
                         break;
                     case  'x':
-                        //uintvalue = (uint16_t)va_arg(ap, int);
-                        //printf("uintvalue=%x\r\n",uintvalue);
                         buffer = my_putshex((uint16_t)va_arg(ap, int), 0, buffer );
                         break;
                     case  'p':
-                        //uint32value = (long)va_arg(ap, long);
-                        //uintvalue = (uint16_t)(uint32value >> 16);
-                        //debu_uint2a('@',uintvalue);
-                        //uintvalue = (uint16_t)uint32value;
-                        //debu_uint2a('*',uintvalue);
                         buffer = my_putshex32((long)va_arg(ap, long),  buffer );
                         break;
                     default:
@@ -760,6 +815,7 @@ void usrMessage_send(uint8_t *msgbuffer, const char *string, ...)
 
 
         pm_msg.malloc_pt = (void *)msgbuffer;
+        pm_msg.command = PM_COM_MESSAGE;
 
         Status = xQueueSend(usrMsgQueue, (void *)&pm_msg, 0);
         if( Status  != pdPASS ){

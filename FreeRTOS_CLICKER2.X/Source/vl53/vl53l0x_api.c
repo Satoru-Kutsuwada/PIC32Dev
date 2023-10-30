@@ -2699,7 +2699,7 @@ VL53L0X_Error VL53L0X_StartMeasurement(VL53L0X_DEV Dev)
 	//LOG_FUNCTION_END(Status);
 	return Status;
 }
-#ifdef ___NOP2
+
 VL53L0X_Error VL53L0X_StopMeasurement(VL53L0X_DEV Dev)
 {
 	VL53L0X_Error Status = VL53L0X_ERROR_NONE;
@@ -2727,7 +2727,7 @@ VL53L0X_Error VL53L0X_StopMeasurement(VL53L0X_DEV Dev)
 	//LOG_FUNCTION_END(Status);
 	return Status;
 }
-#endif
+
 
 VL53L0X_Error VL53L0X_GetMeasurementDataReady(VL53L0X_DEV Dev,
 	uint8_t *pMeasurementDataReady)

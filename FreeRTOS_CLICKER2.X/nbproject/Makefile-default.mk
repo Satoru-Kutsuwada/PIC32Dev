@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=Source/FreeRTOS/RegisterTestTasks.S Source/FreeRTOS/heap_4.c Source/FreeRTOS/list.c Source/FreeRTOS/port.c Source/FreeRTOS/port_asm.S Source/FreeRTOS/queue.c Source/FreeRTOS/tasks.c Source/ConfigPerformance.c Source/main.c Source/usr_Rs485.c Source/usr_timer.c Source/usr_tools.c Source/vl53/usr_i2cMain.c Source/vl53/vl53l0x_api.c Source/vl53/vl53l0x_api_calibration.c Source/vl53/vl53l0x_api_core.c Source/vl53/vl53l0x_api_strings.c Source/vl53/vl53l0x_platform.c Source/vl53/usr_vl53_main.c
+SOURCEFILES_QUOTED_IF_SPACED=Source/FreeRTOS/RegisterTestTasks.S Source/FreeRTOS/heap_4.c Source/FreeRTOS/list.c Source/FreeRTOS/port.c Source/FreeRTOS/port_asm.S Source/FreeRTOS/queue.c Source/FreeRTOS/tasks.c Source/vl53/usr_i2cMain.c Source/vl53/vl53l0x_api.c Source/vl53/vl53l0x_api_calibration.c Source/vl53/vl53l0x_api_core.c Source/vl53/vl53l0x_api_strings.c Source/vl53/vl53l0x_platform.c Source/ConfigPerformance.c Source/main.c Source/usr_Rs485.c Source/usr_timer.c Source/usr_tools.c Source/vl53/usr_vl53_main.c Source/usr_debug_tool.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/Source/FreeRTOS/RegisterTestTasks.o ${OBJECTDIR}/Source/FreeRTOS/heap_4.o ${OBJECTDIR}/Source/FreeRTOS/list.o ${OBJECTDIR}/Source/FreeRTOS/port.o ${OBJECTDIR}/Source/FreeRTOS/port_asm.o ${OBJECTDIR}/Source/FreeRTOS/queue.o ${OBJECTDIR}/Source/FreeRTOS/tasks.o ${OBJECTDIR}/Source/ConfigPerformance.o ${OBJECTDIR}/Source/main.o ${OBJECTDIR}/Source/usr_Rs485.o ${OBJECTDIR}/Source/usr_timer.o ${OBJECTDIR}/Source/usr_tools.o ${OBJECTDIR}/Source/vl53/usr_i2cMain.o ${OBJECTDIR}/Source/vl53/vl53l0x_api.o ${OBJECTDIR}/Source/vl53/vl53l0x_api_calibration.o ${OBJECTDIR}/Source/vl53/vl53l0x_api_core.o ${OBJECTDIR}/Source/vl53/vl53l0x_api_strings.o ${OBJECTDIR}/Source/vl53/vl53l0x_platform.o ${OBJECTDIR}/Source/vl53/usr_vl53_main.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/Source/FreeRTOS/RegisterTestTasks.o.d ${OBJECTDIR}/Source/FreeRTOS/heap_4.o.d ${OBJECTDIR}/Source/FreeRTOS/list.o.d ${OBJECTDIR}/Source/FreeRTOS/port.o.d ${OBJECTDIR}/Source/FreeRTOS/port_asm.o.d ${OBJECTDIR}/Source/FreeRTOS/queue.o.d ${OBJECTDIR}/Source/FreeRTOS/tasks.o.d ${OBJECTDIR}/Source/ConfigPerformance.o.d ${OBJECTDIR}/Source/main.o.d ${OBJECTDIR}/Source/usr_Rs485.o.d ${OBJECTDIR}/Source/usr_timer.o.d ${OBJECTDIR}/Source/usr_tools.o.d ${OBJECTDIR}/Source/vl53/usr_i2cMain.o.d ${OBJECTDIR}/Source/vl53/vl53l0x_api.o.d ${OBJECTDIR}/Source/vl53/vl53l0x_api_calibration.o.d ${OBJECTDIR}/Source/vl53/vl53l0x_api_core.o.d ${OBJECTDIR}/Source/vl53/vl53l0x_api_strings.o.d ${OBJECTDIR}/Source/vl53/vl53l0x_platform.o.d ${OBJECTDIR}/Source/vl53/usr_vl53_main.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/Source/FreeRTOS/RegisterTestTasks.o ${OBJECTDIR}/Source/FreeRTOS/heap_4.o ${OBJECTDIR}/Source/FreeRTOS/list.o ${OBJECTDIR}/Source/FreeRTOS/port.o ${OBJECTDIR}/Source/FreeRTOS/port_asm.o ${OBJECTDIR}/Source/FreeRTOS/queue.o ${OBJECTDIR}/Source/FreeRTOS/tasks.o ${OBJECTDIR}/Source/vl53/usr_i2cMain.o ${OBJECTDIR}/Source/vl53/vl53l0x_api.o ${OBJECTDIR}/Source/vl53/vl53l0x_api_calibration.o ${OBJECTDIR}/Source/vl53/vl53l0x_api_core.o ${OBJECTDIR}/Source/vl53/vl53l0x_api_strings.o ${OBJECTDIR}/Source/vl53/vl53l0x_platform.o ${OBJECTDIR}/Source/ConfigPerformance.o ${OBJECTDIR}/Source/main.o ${OBJECTDIR}/Source/usr_Rs485.o ${OBJECTDIR}/Source/usr_timer.o ${OBJECTDIR}/Source/usr_tools.o ${OBJECTDIR}/Source/vl53/usr_vl53_main.o ${OBJECTDIR}/Source/usr_debug_tool.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/Source/FreeRTOS/RegisterTestTasks.o.d ${OBJECTDIR}/Source/FreeRTOS/heap_4.o.d ${OBJECTDIR}/Source/FreeRTOS/list.o.d ${OBJECTDIR}/Source/FreeRTOS/port.o.d ${OBJECTDIR}/Source/FreeRTOS/port_asm.o.d ${OBJECTDIR}/Source/FreeRTOS/queue.o.d ${OBJECTDIR}/Source/FreeRTOS/tasks.o.d ${OBJECTDIR}/Source/vl53/usr_i2cMain.o.d ${OBJECTDIR}/Source/vl53/vl53l0x_api.o.d ${OBJECTDIR}/Source/vl53/vl53l0x_api_calibration.o.d ${OBJECTDIR}/Source/vl53/vl53l0x_api_core.o.d ${OBJECTDIR}/Source/vl53/vl53l0x_api_strings.o.d ${OBJECTDIR}/Source/vl53/vl53l0x_platform.o.d ${OBJECTDIR}/Source/ConfigPerformance.o.d ${OBJECTDIR}/Source/main.o.d ${OBJECTDIR}/Source/usr_Rs485.o.d ${OBJECTDIR}/Source/usr_timer.o.d ${OBJECTDIR}/Source/usr_tools.o.d ${OBJECTDIR}/Source/vl53/usr_vl53_main.o.d ${OBJECTDIR}/Source/usr_debug_tool.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/Source/FreeRTOS/RegisterTestTasks.o ${OBJECTDIR}/Source/FreeRTOS/heap_4.o ${OBJECTDIR}/Source/FreeRTOS/list.o ${OBJECTDIR}/Source/FreeRTOS/port.o ${OBJECTDIR}/Source/FreeRTOS/port_asm.o ${OBJECTDIR}/Source/FreeRTOS/queue.o ${OBJECTDIR}/Source/FreeRTOS/tasks.o ${OBJECTDIR}/Source/ConfigPerformance.o ${OBJECTDIR}/Source/main.o ${OBJECTDIR}/Source/usr_Rs485.o ${OBJECTDIR}/Source/usr_timer.o ${OBJECTDIR}/Source/usr_tools.o ${OBJECTDIR}/Source/vl53/usr_i2cMain.o ${OBJECTDIR}/Source/vl53/vl53l0x_api.o ${OBJECTDIR}/Source/vl53/vl53l0x_api_calibration.o ${OBJECTDIR}/Source/vl53/vl53l0x_api_core.o ${OBJECTDIR}/Source/vl53/vl53l0x_api_strings.o ${OBJECTDIR}/Source/vl53/vl53l0x_platform.o ${OBJECTDIR}/Source/vl53/usr_vl53_main.o
+OBJECTFILES=${OBJECTDIR}/Source/FreeRTOS/RegisterTestTasks.o ${OBJECTDIR}/Source/FreeRTOS/heap_4.o ${OBJECTDIR}/Source/FreeRTOS/list.o ${OBJECTDIR}/Source/FreeRTOS/port.o ${OBJECTDIR}/Source/FreeRTOS/port_asm.o ${OBJECTDIR}/Source/FreeRTOS/queue.o ${OBJECTDIR}/Source/FreeRTOS/tasks.o ${OBJECTDIR}/Source/vl53/usr_i2cMain.o ${OBJECTDIR}/Source/vl53/vl53l0x_api.o ${OBJECTDIR}/Source/vl53/vl53l0x_api_calibration.o ${OBJECTDIR}/Source/vl53/vl53l0x_api_core.o ${OBJECTDIR}/Source/vl53/vl53l0x_api_strings.o ${OBJECTDIR}/Source/vl53/vl53l0x_platform.o ${OBJECTDIR}/Source/ConfigPerformance.o ${OBJECTDIR}/Source/main.o ${OBJECTDIR}/Source/usr_Rs485.o ${OBJECTDIR}/Source/usr_timer.o ${OBJECTDIR}/Source/usr_tools.o ${OBJECTDIR}/Source/vl53/usr_vl53_main.o ${OBJECTDIR}/Source/usr_debug_tool.o
 
 # Source Files
-SOURCEFILES=Source/FreeRTOS/RegisterTestTasks.S Source/FreeRTOS/heap_4.c Source/FreeRTOS/list.c Source/FreeRTOS/port.c Source/FreeRTOS/port_asm.S Source/FreeRTOS/queue.c Source/FreeRTOS/tasks.c Source/ConfigPerformance.c Source/main.c Source/usr_Rs485.c Source/usr_timer.c Source/usr_tools.c Source/vl53/usr_i2cMain.c Source/vl53/vl53l0x_api.c Source/vl53/vl53l0x_api_calibration.c Source/vl53/vl53l0x_api_core.c Source/vl53/vl53l0x_api_strings.c Source/vl53/vl53l0x_platform.c Source/vl53/usr_vl53_main.c
+SOURCEFILES=Source/FreeRTOS/RegisterTestTasks.S Source/FreeRTOS/heap_4.c Source/FreeRTOS/list.c Source/FreeRTOS/port.c Source/FreeRTOS/port_asm.S Source/FreeRTOS/queue.c Source/FreeRTOS/tasks.c Source/vl53/usr_i2cMain.c Source/vl53/vl53l0x_api.c Source/vl53/vl53l0x_api_calibration.c Source/vl53/vl53l0x_api_core.c Source/vl53/vl53l0x_api_strings.c Source/vl53/vl53l0x_platform.c Source/ConfigPerformance.c Source/main.c Source/usr_Rs485.c Source/usr_timer.c Source/usr_tools.c Source/vl53/usr_vl53_main.c Source/usr_debug_tool.c
 
 
 
@@ -163,36 +163,6 @@ ${OBJECTDIR}/Source/FreeRTOS/tasks.o: Source/FreeRTOS/tasks.c  .generated_files/
 	@${RM} ${OBJECTDIR}/Source/FreeRTOS/tasks.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/FreeRTOS/tasks.o.d" -o ${OBJECTDIR}/Source/FreeRTOS/tasks.o Source/FreeRTOS/tasks.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
-${OBJECTDIR}/Source/ConfigPerformance.o: Source/ConfigPerformance.c  .generated_files/flags/default/17bc4b35ae0a6d94dc69b305dce9bef58e954745 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}/Source" 
-	@${RM} ${OBJECTDIR}/Source/ConfigPerformance.o.d 
-	@${RM} ${OBJECTDIR}/Source/ConfigPerformance.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/ConfigPerformance.o.d" -o ${OBJECTDIR}/Source/ConfigPerformance.o Source/ConfigPerformance.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/Source/main.o: Source/main.c  .generated_files/flags/default/351d0f4d9863c391388e49a852bb644379961c18 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}/Source" 
-	@${RM} ${OBJECTDIR}/Source/main.o.d 
-	@${RM} ${OBJECTDIR}/Source/main.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/main.o.d" -o ${OBJECTDIR}/Source/main.o Source/main.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/Source/usr_Rs485.o: Source/usr_Rs485.c  .generated_files/flags/default/dd407626e9beb5f9f59956905127f098e9592dc8 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}/Source" 
-	@${RM} ${OBJECTDIR}/Source/usr_Rs485.o.d 
-	@${RM} ${OBJECTDIR}/Source/usr_Rs485.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/usr_Rs485.o.d" -o ${OBJECTDIR}/Source/usr_Rs485.o Source/usr_Rs485.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/Source/usr_timer.o: Source/usr_timer.c  .generated_files/flags/default/4a4cd05218ec567f3989db7b7e527ee3309e1730 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}/Source" 
-	@${RM} ${OBJECTDIR}/Source/usr_timer.o.d 
-	@${RM} ${OBJECTDIR}/Source/usr_timer.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/usr_timer.o.d" -o ${OBJECTDIR}/Source/usr_timer.o Source/usr_timer.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/Source/usr_tools.o: Source/usr_tools.c  .generated_files/flags/default/cb1bde9a0cf8a1fada2935cbb21d7705094d56ba .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}/Source" 
-	@${RM} ${OBJECTDIR}/Source/usr_tools.o.d 
-	@${RM} ${OBJECTDIR}/Source/usr_tools.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/usr_tools.o.d" -o ${OBJECTDIR}/Source/usr_tools.o Source/usr_tools.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
-	
 ${OBJECTDIR}/Source/vl53/usr_i2cMain.o: Source/vl53/usr_i2cMain.c  .generated_files/flags/default/700b2e6f4a0c50c59f9b0c6b818ee8f82af62cc2 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/Source/vl53" 
 	@${RM} ${OBJECTDIR}/Source/vl53/usr_i2cMain.o.d 
@@ -229,11 +199,47 @@ ${OBJECTDIR}/Source/vl53/vl53l0x_platform.o: Source/vl53/vl53l0x_platform.c  .ge
 	@${RM} ${OBJECTDIR}/Source/vl53/vl53l0x_platform.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/vl53/vl53l0x_platform.o.d" -o ${OBJECTDIR}/Source/vl53/vl53l0x_platform.o Source/vl53/vl53l0x_platform.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
+${OBJECTDIR}/Source/ConfigPerformance.o: Source/ConfigPerformance.c  .generated_files/flags/default/17bc4b35ae0a6d94dc69b305dce9bef58e954745 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/Source" 
+	@${RM} ${OBJECTDIR}/Source/ConfigPerformance.o.d 
+	@${RM} ${OBJECTDIR}/Source/ConfigPerformance.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/ConfigPerformance.o.d" -o ${OBJECTDIR}/Source/ConfigPerformance.o Source/ConfigPerformance.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/Source/main.o: Source/main.c  .generated_files/flags/default/351d0f4d9863c391388e49a852bb644379961c18 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/Source" 
+	@${RM} ${OBJECTDIR}/Source/main.o.d 
+	@${RM} ${OBJECTDIR}/Source/main.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/main.o.d" -o ${OBJECTDIR}/Source/main.o Source/main.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/Source/usr_Rs485.o: Source/usr_Rs485.c  .generated_files/flags/default/dd407626e9beb5f9f59956905127f098e9592dc8 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/Source" 
+	@${RM} ${OBJECTDIR}/Source/usr_Rs485.o.d 
+	@${RM} ${OBJECTDIR}/Source/usr_Rs485.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/usr_Rs485.o.d" -o ${OBJECTDIR}/Source/usr_Rs485.o Source/usr_Rs485.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/Source/usr_timer.o: Source/usr_timer.c  .generated_files/flags/default/4a4cd05218ec567f3989db7b7e527ee3309e1730 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/Source" 
+	@${RM} ${OBJECTDIR}/Source/usr_timer.o.d 
+	@${RM} ${OBJECTDIR}/Source/usr_timer.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/usr_timer.o.d" -o ${OBJECTDIR}/Source/usr_timer.o Source/usr_timer.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/Source/usr_tools.o: Source/usr_tools.c  .generated_files/flags/default/cb1bde9a0cf8a1fada2935cbb21d7705094d56ba .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/Source" 
+	@${RM} ${OBJECTDIR}/Source/usr_tools.o.d 
+	@${RM} ${OBJECTDIR}/Source/usr_tools.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/usr_tools.o.d" -o ${OBJECTDIR}/Source/usr_tools.o Source/usr_tools.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
 ${OBJECTDIR}/Source/vl53/usr_vl53_main.o: Source/vl53/usr_vl53_main.c  .generated_files/flags/default/72ed0b893c4fb1f32fd37d33bc3232317f13f0eb .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/Source/vl53" 
 	@${RM} ${OBJECTDIR}/Source/vl53/usr_vl53_main.o.d 
 	@${RM} ${OBJECTDIR}/Source/vl53/usr_vl53_main.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/vl53/usr_vl53_main.o.d" -o ${OBJECTDIR}/Source/vl53/usr_vl53_main.o Source/vl53/usr_vl53_main.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/Source/usr_debug_tool.o: Source/usr_debug_tool.c  .generated_files/flags/default/f0c1d510a1687f655e80086610b9ea85114ea12 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/Source" 
+	@${RM} ${OBJECTDIR}/Source/usr_debug_tool.o.d 
+	@${RM} ${OBJECTDIR}/Source/usr_debug_tool.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG -D__MPLAB_DEBUGGER_PK3=1  -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/usr_debug_tool.o.d" -o ${OBJECTDIR}/Source/usr_debug_tool.o Source/usr_debug_tool.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
 else
 ${OBJECTDIR}/Source/FreeRTOS/heap_4.o: Source/FreeRTOS/heap_4.c  .generated_files/flags/default/41c255d3e50706bc738c97f8fa5858a7fd241245 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
@@ -265,36 +271,6 @@ ${OBJECTDIR}/Source/FreeRTOS/tasks.o: Source/FreeRTOS/tasks.c  .generated_files/
 	@${RM} ${OBJECTDIR}/Source/FreeRTOS/tasks.o.d 
 	@${RM} ${OBJECTDIR}/Source/FreeRTOS/tasks.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/FreeRTOS/tasks.o.d" -o ${OBJECTDIR}/Source/FreeRTOS/tasks.o Source/FreeRTOS/tasks.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/Source/ConfigPerformance.o: Source/ConfigPerformance.c  .generated_files/flags/default/7a01aa080511e0030c527e4b45eb4e398d0f184a .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}/Source" 
-	@${RM} ${OBJECTDIR}/Source/ConfigPerformance.o.d 
-	@${RM} ${OBJECTDIR}/Source/ConfigPerformance.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/ConfigPerformance.o.d" -o ${OBJECTDIR}/Source/ConfigPerformance.o Source/ConfigPerformance.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/Source/main.o: Source/main.c  .generated_files/flags/default/a040342e3948096724fb2b34011cb36d0cd2297d .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}/Source" 
-	@${RM} ${OBJECTDIR}/Source/main.o.d 
-	@${RM} ${OBJECTDIR}/Source/main.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/main.o.d" -o ${OBJECTDIR}/Source/main.o Source/main.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/Source/usr_Rs485.o: Source/usr_Rs485.c  .generated_files/flags/default/87488460c0182f5b2e9a28076dae0f358ea4f07c .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}/Source" 
-	@${RM} ${OBJECTDIR}/Source/usr_Rs485.o.d 
-	@${RM} ${OBJECTDIR}/Source/usr_Rs485.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/usr_Rs485.o.d" -o ${OBJECTDIR}/Source/usr_Rs485.o Source/usr_Rs485.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/Source/usr_timer.o: Source/usr_timer.c  .generated_files/flags/default/369a1db0fb454d13022801ff9f6d7574ed561046 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}/Source" 
-	@${RM} ${OBJECTDIR}/Source/usr_timer.o.d 
-	@${RM} ${OBJECTDIR}/Source/usr_timer.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/usr_timer.o.d" -o ${OBJECTDIR}/Source/usr_timer.o Source/usr_timer.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
-	
-${OBJECTDIR}/Source/usr_tools.o: Source/usr_tools.c  .generated_files/flags/default/7f786bd1c8104c892040f08eb584e51acf086408 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
-	@${MKDIR} "${OBJECTDIR}/Source" 
-	@${RM} ${OBJECTDIR}/Source/usr_tools.o.d 
-	@${RM} ${OBJECTDIR}/Source/usr_tools.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/usr_tools.o.d" -o ${OBJECTDIR}/Source/usr_tools.o Source/usr_tools.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
 ${OBJECTDIR}/Source/vl53/usr_i2cMain.o: Source/vl53/usr_i2cMain.c  .generated_files/flags/default/4139fa7172684239161e01c9f8a54543a9e89667 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/Source/vl53" 
@@ -332,11 +308,47 @@ ${OBJECTDIR}/Source/vl53/vl53l0x_platform.o: Source/vl53/vl53l0x_platform.c  .ge
 	@${RM} ${OBJECTDIR}/Source/vl53/vl53l0x_platform.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/vl53/vl53l0x_platform.o.d" -o ${OBJECTDIR}/Source/vl53/vl53l0x_platform.o Source/vl53/vl53l0x_platform.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
+${OBJECTDIR}/Source/ConfigPerformance.o: Source/ConfigPerformance.c  .generated_files/flags/default/7a01aa080511e0030c527e4b45eb4e398d0f184a .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/Source" 
+	@${RM} ${OBJECTDIR}/Source/ConfigPerformance.o.d 
+	@${RM} ${OBJECTDIR}/Source/ConfigPerformance.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/ConfigPerformance.o.d" -o ${OBJECTDIR}/Source/ConfigPerformance.o Source/ConfigPerformance.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/Source/main.o: Source/main.c  .generated_files/flags/default/a040342e3948096724fb2b34011cb36d0cd2297d .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/Source" 
+	@${RM} ${OBJECTDIR}/Source/main.o.d 
+	@${RM} ${OBJECTDIR}/Source/main.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/main.o.d" -o ${OBJECTDIR}/Source/main.o Source/main.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/Source/usr_Rs485.o: Source/usr_Rs485.c  .generated_files/flags/default/87488460c0182f5b2e9a28076dae0f358ea4f07c .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/Source" 
+	@${RM} ${OBJECTDIR}/Source/usr_Rs485.o.d 
+	@${RM} ${OBJECTDIR}/Source/usr_Rs485.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/usr_Rs485.o.d" -o ${OBJECTDIR}/Source/usr_Rs485.o Source/usr_Rs485.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/Source/usr_timer.o: Source/usr_timer.c  .generated_files/flags/default/369a1db0fb454d13022801ff9f6d7574ed561046 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/Source" 
+	@${RM} ${OBJECTDIR}/Source/usr_timer.o.d 
+	@${RM} ${OBJECTDIR}/Source/usr_timer.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/usr_timer.o.d" -o ${OBJECTDIR}/Source/usr_timer.o Source/usr_timer.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/Source/usr_tools.o: Source/usr_tools.c  .generated_files/flags/default/7f786bd1c8104c892040f08eb584e51acf086408 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/Source" 
+	@${RM} ${OBJECTDIR}/Source/usr_tools.o.d 
+	@${RM} ${OBJECTDIR}/Source/usr_tools.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/usr_tools.o.d" -o ${OBJECTDIR}/Source/usr_tools.o Source/usr_tools.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
 ${OBJECTDIR}/Source/vl53/usr_vl53_main.o: Source/vl53/usr_vl53_main.c  .generated_files/flags/default/90d24ec51fcd8f3eeee3cd497c19a96d13a11573 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}/Source/vl53" 
 	@${RM} ${OBJECTDIR}/Source/vl53/usr_vl53_main.o.d 
 	@${RM} ${OBJECTDIR}/Source/vl53/usr_vl53_main.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/vl53/usr_vl53_main.o.d" -o ${OBJECTDIR}/Source/vl53/usr_vl53_main.o Source/vl53/usr_vl53_main.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/Source/usr_debug_tool.o: Source/usr_debug_tool.c  .generated_files/flags/default/ff0aea6547abe0fb60d5ec7ba1faf846bc54906c .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}/Source" 
+	@${RM} ${OBJECTDIR}/Source/usr_debug_tool.o.d 
+	@${RM} ${OBJECTDIR}/Source/usr_debug_tool.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -I"." -I"Source" -I"Source/FreeRTOS/include" -I"Source/vl53/inc" -fno-common -MP -MMD -MF "${OBJECTDIR}/Source/usr_debug_tool.o.d" -o ${OBJECTDIR}/Source/usr_debug_tool.o Source/usr_debug_tool.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
 endif
 
@@ -351,12 +363,12 @@ endif
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
 ${DISTDIR}/FreeRTOS_CLICKER2.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}: ${OBJECTFILES}  nbproject/Makefile-${CND_CONF}.mk    
 	@${MKDIR} ${DISTDIR} 
-	${MP_CC} $(MP_EXTRA_LD_PRE) -g -mdebugger -D__MPLAB_DEBUGGER_PK3=1 -mprocessor=$(MP_PROCESSOR_OPTION)  -o ${DISTDIR}/FreeRTOS_CLICKER2.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX} ${OBJECTFILES_QUOTED_IF_SPACED}          -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)   -mreserve=data@0x0:0x1FC -mreserve=boot@0x1FC02000:0x1FC02FEF -mreserve=boot@0x1FC02000:0x1FC024FF  -Wl,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_LD_POST)$(MP_LINKER_FILE_OPTION),--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1,-D=__DEBUG_D,--defsym=__MPLAB_DEBUGGER_PK3=1,--no-code-in-dinit,--no-dinit-in-serial-mem,-Map="${DISTDIR}/${PROJECTNAME}.${IMAGE_TYPE}.map",--memorysummary,${DISTDIR}/memoryfile.xml -mdfp="${DFP_DIR}"
+	${MP_CC} $(MP_EXTRA_LD_PRE) -g -mdebugger -D__MPLAB_DEBUGGER_PK3=1 -mprocessor=$(MP_PROCESSOR_OPTION)  -o ${DISTDIR}/FreeRTOS_CLICKER2.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX} ${OBJECTFILES_QUOTED_IF_SPACED}          -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)   -mreserve=data@0x0:0x1FC -mreserve=boot@0x1FC02000:0x1FC02FEF -mreserve=boot@0x1FC02000:0x1FC024FF  -Wl,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_LD_POST)$(MP_LINKER_FILE_OPTION),--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1,-D=__DEBUG_D,--defsym=__MPLAB_DEBUGGER_PK3=1,--defsym=_min_heap_size=1024,--no-code-in-dinit,--no-dinit-in-serial-mem,-Map="${DISTDIR}/${PROJECTNAME}.${IMAGE_TYPE}.map",--memorysummary,${DISTDIR}/memoryfile.xml -mdfp="${DFP_DIR}"
 	
 else
 ${DISTDIR}/FreeRTOS_CLICKER2.X.${IMAGE_TYPE}.${OUTPUT_SUFFIX}: ${OBJECTFILES}  nbproject/Makefile-${CND_CONF}.mk   
 	@${MKDIR} ${DISTDIR} 
-	${MP_CC} $(MP_EXTRA_LD_PRE)  -mprocessor=$(MP_PROCESSOR_OPTION)  -o ${DISTDIR}/FreeRTOS_CLICKER2.X.${IMAGE_TYPE}.${DEBUGGABLE_SUFFIX} ${OBJECTFILES_QUOTED_IF_SPACED}          -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -Wl,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_LD_POST)$(MP_LINKER_FILE_OPTION),--no-code-in-dinit,--no-dinit-in-serial-mem,-Map="${DISTDIR}/${PROJECTNAME}.${IMAGE_TYPE}.map",--memorysummary,${DISTDIR}/memoryfile.xml -mdfp="${DFP_DIR}"
+	${MP_CC} $(MP_EXTRA_LD_PRE)  -mprocessor=$(MP_PROCESSOR_OPTION)  -o ${DISTDIR}/FreeRTOS_CLICKER2.X.${IMAGE_TYPE}.${DEBUGGABLE_SUFFIX} ${OBJECTFILES_QUOTED_IF_SPACED}          -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -Wl,--defsym=__MPLAB_BUILD=1$(MP_EXTRA_LD_POST)$(MP_LINKER_FILE_OPTION),--defsym=_min_heap_size=1024,--no-code-in-dinit,--no-dinit-in-serial-mem,-Map="${DISTDIR}/${PROJECTNAME}.${IMAGE_TYPE}.map",--memorysummary,${DISTDIR}/memoryfile.xml -mdfp="${DFP_DIR}"
 	${MP_CC_DIR}\\xc32-bin2hex ${DISTDIR}/FreeRTOS_CLICKER2.X.${IMAGE_TYPE}.${DEBUGGABLE_SUFFIX} 
 endif
 

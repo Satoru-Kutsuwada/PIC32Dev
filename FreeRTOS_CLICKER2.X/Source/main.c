@@ -225,7 +225,7 @@ int main( void )
     // xTaskCreate
     //  #define configMINIMAL_STACK_SIZE				( 190 )
     //-----------------------------------------
-    Status = xTaskCreate(vTask001, "U01",  512 + 10, NULL, 1, NULL);
+    Status = xTaskCreate(vTask001, "U01", 190 + 10, NULL, 2, NULL);
     Xprintf("xTaskCreate(Task01)=%d\r\n",Status);
     Status = xTaskCreate(vTask002, "U02", 190 + 10, NULL, 2, NULL);
     Xprintf("xTaskCreate(Task02)=%d\r\n",Status);
@@ -328,6 +328,7 @@ void _general_exception_handler( unsigned long ulCause, unsigned long ulStatus )
 
 	for( ;; );
 }
+
 /*-----------------------------------------------------------*/
 
 void vAssertCalled( const char * pcFile, unsigned long ulLine )

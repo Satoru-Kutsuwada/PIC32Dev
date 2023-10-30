@@ -23,9 +23,23 @@ extern "C" {
 //=============================================================================
 //
 //=============================================================================
+typedef enum{
+    PM_COM_MESSAGE,
+    PM_COM_UART_RX,
+    PM_COMMAND_MAX,
+            
+}PRINT_MSG_COMMAND;
+
 typedef struct{
-    void *malloc_pt;
+    void                *malloc_pt;
+    PRINT_MSG_COMMAND   command;
 }PRINT_MSG_FORM;
+
+#define     MESG_BUF_MAX    30
+typedef struct{
+    PRINT_MSG_COMMAND   command;
+    uint8_t             buf[MESG_BUF_MAX];
+}MESSAGE_DATA;
 
 //=============================================================================
 //
