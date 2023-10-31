@@ -2,6 +2,7 @@
 //=============================================================================
 //  include
 //=============================================================================
+#include "FreeRTOS.h"
 #include "usr_system.h"
 #include "xc.h"
 
@@ -142,7 +143,7 @@ void usrInitTimer1(void)
     
     INTCONbits.MVEC = 1; // マルチベクタ割り込みを有効にする
     
-    IPC1bits.T1IP = 7;   // 割り込み優先度(0-7)
+    IPC1bits.T1IP = configMAX_SYSCALL_INTERRUPT_PRIORITY;   // 割り込み優先度(0-7)
     IPC1bits.T1IS = 0;   // 副優先度(0-3)
     IFS0bits.T1IF = 0;   // 割り込みフラグをリセット
     IEC0bits.T1IE = 1;   // タイマー1の割り込みを許可
@@ -271,7 +272,7 @@ void usrInitTimer2(void)
     
     INTCONbits.MVEC = 1; // マルチベクタ割り込みを有効にする
     
-    IPC2bits.T2IP = 7;   // 割り込み優先度(0-7)
+    IPC2bits.T2IP = configMAX_SYSCALL_INTERRUPT_PRIORITY;   // 割り込み優先度(0-7)
     IPC2bits.T2IS = 0;   // 副優先度(0-3)
     IFS0bits.T2IF = 0;   // 割り込みフラグをリセット
     IEC0bits.T2IE = 1;   // タイマー1の割り込みを許可

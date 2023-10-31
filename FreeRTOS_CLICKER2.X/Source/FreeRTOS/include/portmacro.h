@@ -129,10 +129,11 @@ uint32_t ulStatus;													\
 }
 
 
-extern void vTaskEnterCritical( void );
+//extern void vTaskEnterCritical( void );
+extern void vTaskEnterCritical( char *file, int line );
 extern void vTaskExitCritical( void );
 #define portCRITICAL_NESTING_IN_TCB	1
-#define portENTER_CRITICAL()		vTaskEnterCritical()
+#define portENTER_CRITICAL()		vTaskEnterCritical(__FILE__, __LINE__)
 #define portEXIT_CRITICAL()			vTaskExitCritical()
 
 extern UBaseType_t uxPortSetInterruptMaskFromISR();

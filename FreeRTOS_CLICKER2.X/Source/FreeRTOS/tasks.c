@@ -4341,9 +4341,40 @@ static void prvResetNextTaskUnblockTime( void )
 
 #endif /* configUSE_MUTEXES */
 /*-----------------------------------------------------------*/
-
+void Yprintf( uint8_t *string, uint32_t dt );
 #if ( portCRITICAL_NESTING_IN_TCB == 1 )
 
+    void vTaskEnterCritical( char *file, int line )
+    {
+        //Xprintf("vTaskEnterCritical()\r\n");
+        portDISABLE_INTERRUPTS();
+
+        if( xSchedulerRunning != pdFALSE )
+        {
+            ( pxCurrentTCB->uxCriticalNesting )++;
+            //Xprintf("uxCriticalNesting=%d\r\n",pxCurrentTCB->uxCriticalNesting);
+
+            /* This is not the interrupt safe version of the enter critical
+             * function so  assert() if it is being called from an interrupt
+             * context.  Only API functions that end in "FromISR" can be used in an
+             * interrupt.  Only assert if the critical nesting count is 1 to
+             * protect against recursive calls if the assert function also uses a
+             * critical section. */
+            if( pxCurrentTCB->uxCriticalNesting == 1 )
+            {
+                if( (uxInterruptNesting == 0) == 0 ){
+                    Yprintf(file,0);
+                    Yprintf(" ,%d\r\n",line);
+                }
+                portASSERT_IF_IN_ISR();
+            }
+        }
+        else
+        {
+            mtCOVERAGE_TEST_MARKER();
+        }
+    }
+#ifdef ___NOP
     void vTaskEnterCritical( void )
     {
         //Xprintf("vTaskEnterCritical()\r\n");
@@ -4370,6 +4401,7 @@ static void prvResetNextTaskUnblockTime( void )
             mtCOVERAGE_TEST_MARKER();
         }
     }
+#endif
 
 #endif /* portCRITICAL_NESTING_IN_TCB */
 /*-----------------------------------------------------------*/

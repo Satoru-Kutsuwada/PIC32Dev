@@ -33,6 +33,7 @@
 //=============================================================================
 extern  USR_UARTx_BUF    usrUartxRx;
 
+extern  USR_VL53_DATA   usrVL53Ctrl;
 
 //=============================================================================
 // Prototype
@@ -341,22 +342,43 @@ void DBmanue_vl53(void)
 {
 	switch( input_string.main[0] ){
 	case '1':
-        // VL53_init();
+        usrVL53Ctrl.StopReq = 1;
         break;
     case '2':
-        //vl53l0x_test();
+        usrVL53Ctrl.StopReq = 1;
+        while( usrVL53Ctrl.RasingMode != RASING_MODE_NON ){
+            vTaskDelay(10); 
+        }
+        usrVL53Ctrl.RasingMode = RASING_MODE_CONTINUE;
+        
         break;
     case '3':
-        //vl53l0x_Single_test();
+        usrVL53Ctrl.StopReq = 1;
+        while( usrVL53Ctrl.RasingMode != RASING_MODE_NON ){
+            vTaskDelay(10); 
+        }
+        usrVL53Ctrl.RasingMode = RASING_MODE_SINGLE;
         break;
     case '4':
-        //vl53l0x_SingleHA_test();
+        usrVL53Ctrl.StopReq = 1;
+        while( usrVL53Ctrl.RasingMode != RASING_MODE_NON ){
+            vTaskDelay(10); 
+        }
+        usrVL53Ctrl.RasingMode = RASING_MODE_SINGLE_HA;
         break;
     case '5':
-        //vl53l0x_SingleHS_test();
+        usrVL53Ctrl.StopReq = 1;
+        while( usrVL53Ctrl.RasingMode != RASING_MODE_NON ){
+            vTaskDelay(10); 
+        }
+        usrVL53Ctrl.RasingMode = RASING_MODE_SINGLE_HS;
         break;
     case '6':
-        //vl53l0x_SingleLR_test();
+        usrVL53Ctrl.StopReq = 1;
+        while( usrVL53Ctrl.RasingMode != RASING_MODE_NON ){
+            vTaskDelay(10); 
+        }
+        usrVL53Ctrl.RasingMode = RASING_MODE_SINGLE_LR;
         break;
     case '7':
         vl53data_disp();

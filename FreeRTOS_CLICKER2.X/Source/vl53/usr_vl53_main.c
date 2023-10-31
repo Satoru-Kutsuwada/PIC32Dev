@@ -46,13 +46,7 @@ VL53L0X_DEV    						Dev = &MyDevice;
 
 
 
-typedef struct{
-    RASING_MODE     RasingMode;
-    uint16_t        Status;
-    uint16_t        StopReq;
-    int             MesurData;
-    
-}USR_VL53_DATA;
+
 
 USR_VL53_DATA   usrVL53Ctrl;
 
@@ -79,10 +73,10 @@ VL53L0X_Error WaitStopCompleted(VL53L0X_DEV Dev) ;
 VL53L0X_Error WaitMeasurementDataReady(VL53L0X_DEV Dev) ;
 
 VL53L0X_Error usrSinglRanging(VL53L0X_Dev_t *pMyDevice, RASING_MODE sel);
-void usrMessage_send(uint8_t *msgbuffer, const char *string, ...);
+void usrMessage_send(const char *string, ...);
+void    teset_msg(void);
 
 
-uint8_t     T01message[128];
 //=============================================================================
 //  vTask001
 //=============================================================================
@@ -102,9 +96,13 @@ void vTask001(void *pvParameters)
     
     vTaskDelay(100);    
 
-    Xprintf("T01message=%p\r\n",T01message);
-    usrMessage_send(T01message, "TEST MESSAGE from Task001\r\n");
 
+    usrMessage_send("TEST MESSAGE from Task001\r\n");
+    
+    vTaskDelay(100);    
+
+   // teset_msg();
+    
 
     while(1){
         while(usrVL53Ctrl.RasingMode == RASING_MODE_NON) {
@@ -145,6 +143,7 @@ void vTask001(void *pvParameters)
                     print_pal_error(Status,__LINE__);
                 }
 
+                usrVL53Ctrl.StopReq = 0;
                 while( usrVL53Ctrl.StopReq == 0 ) {
                     Status = WaitMeasurementDataReady(&MyDevice);
                     if(Status != VL53L0X_ERROR_NONE){
@@ -225,7 +224,8 @@ void vTask001(void *pvParameters)
             if(Status != VL53L0X_ERROR_NONE){
                 Xprintf("Error:%d  usrSinglRanging(line%d)\r\n",Status,__LINE__);
             }
-            
+
+            usrVL53Ctrl.StopReq = 0;
             while( usrVL53Ctrl.StopReq == 0 ) {
                 if(Status == VL53L0X_ERROR_NONE){
                     /*
@@ -285,6 +285,7 @@ void vTask001(void *pvParameters)
         
         usrVL53Ctrl.Status = Status;
         usrVL53Ctrl.RasingMode = RASING_MODE_NON;
+        usrVL53Ctrl.StopReq = 0;
     }
 }
 

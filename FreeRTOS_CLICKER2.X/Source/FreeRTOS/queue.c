@@ -28,6 +28,10 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include "xc.h"
+
+void Yprintf( uint8_t *string, uint32_t dt );
+
 
 /* Defining MPU_WRAPPERS_INCLUDED_FROM_API_FILE prevents task.h from redefining
  * all the API functions to use the MPU wrappers.  That should only be done when
@@ -1079,6 +1083,7 @@ BaseType_t xQueueGenericSendFromISR( QueueHandle_t xQueue,
      * not (i.e. has a task with a higher priority than us been woken by this
      * post). */
     uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
+    
     {
         if( ( pxQueue->uxMessagesWaiting < pxQueue->uxLength ) || ( xCopyPosition == queueOVERWRITE ) )
         {
@@ -1086,7 +1091,6 @@ BaseType_t xQueueGenericSendFromISR( QueueHandle_t xQueue,
             const UBaseType_t uxPreviousMessagesWaiting = pxQueue->uxMessagesWaiting;
 
             traceQUEUE_SEND_FROM_ISR( pxQueue );
-
             /* Semaphores use xQueueGiveFromISR(), so pxQueue will not be a
              *  semaphore or mutex.  That means prvCopyDataToQueue() cannot result
              *  in a task disinheriting a priority and prvCopyDataToQueue() can be

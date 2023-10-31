@@ -25,21 +25,25 @@ extern "C" {
 //=============================================================================
 typedef enum{
     PM_COM_MESSAGE,
+    PM_COM_T1MESSAGE,
+    PM_COM_T2MESSAGE,
     PM_COM_UART_RX,
     PM_COMMAND_MAX,
             
 }PRINT_MSG_COMMAND;
 
+// usrMsgQueue
 typedef struct{
-    void                *malloc_pt;
+    void                *ptr;
     PRINT_MSG_COMMAND   command;
-}PRINT_MSG_FORM;
+    uint8_t             buf[128];
+} USR_MSG_QUEUE;
 
-#define     MESG_BUF_MAX    30
 typedef struct{
+    void                *ptr;
     PRINT_MSG_COMMAND   command;
-    uint8_t             buf[MESG_BUF_MAX];
-}MESSAGE_DATA;
+} USR_MSG_QUEUE_ISR;
+
 
 //=============================================================================
 //
@@ -722,9 +726,18 @@ typedef enum{
 }RASING_MODE;
 
 
-#define LOG_PRINT_VL53(...)      
+typedef struct{
+    RASING_MODE     RasingMode;
+    uint16_t        Status;
+    uint16_t        StopReq;
+    int             MesurData;
+    
+}USR_VL53_DATA;
 
 #ifdef ___NOP
+#define LOG_PRINT_VL53(...)      
+#endif
+
 #define LOG_PRINT_VL53(...)                                                      \
 {                                                                               \
     if(usrLogSW_VL53){                                                           \
@@ -732,7 +745,6 @@ typedef enum{
     }                                                                           \
 }
 
-#endif
 
 
 

@@ -28,8 +28,11 @@ const char ConvC[]= { '0','1','2','3','4','5','6','7','8','9','a','b','c','d','e
 USR_UARTx_BUF    usrUartxRx;
 USR_UARTx_BUF    usrUartx485Rx;
 
-PRINT_MSG_COMMAND   usr_msg_command;
+//PRINT_MSG_COMMAND   usr_msg_command;
 
+
+USR_MSG_QUEUE_ISR   usrMsgQueueUART;
+USR_MSG_QUEUE_ISR   usrMsgQueueUART485;
 //=============================================================================
 // external variable
 //=============================================================================
@@ -47,16 +50,17 @@ int getch_buf(USR_UARTx_BUF *buf);
 
 void usrUartRxEventISR(void);
 void debu_main(void);
-
+void Yprintf( uint8_t *string, uint32_t dt );
        
 //=============================================================================
 //  vTask003 UART for debug message
 //=============================================================================
 void vTask003(void *pvParameters)
 {
-    PRINT_MSG_FORM  *pm_msg;
+    USR_MSG_QUEUE  *pm_msg;
+    USR_MSG_QUEUE  **pm_msg2;
     uint8_t			msgQueBuf[sizeof(void *)];
-    MESSAGE_DATA    *print_mess;
+
     char            temp[]="%p,%p\r\n";
     UBaseType_t uxNumberOfItems;
     uint8_t         ch;
@@ -66,21 +70,19 @@ void vTask003(void *pvParameters)
     while(1) {
                     
         if(xQueueReceive(usrMsgQueue, msgQueBuf, portMAX_DELAY) == pdPASS ) {
-            Xprintf("usrMsgQueue \r\n");
-            pm_msg = (PRINT_MSG_FORM *)msgQueBuf;
-            
-            Xprintf("pm_msg->malloc_pt=%p\r\n",pm_msg->malloc_pt);
-            Xprintf("pm_msg->command=%d\r\n",pm_msg->command);
-            
-            
+            pm_msg = (USR_MSG_QUEUE *)msgQueBuf;
+            pm_msg = pm_msg->ptr;
+
             switch(pm_msg->command){
             case PM_COM_MESSAGE:
-                print_mess = (MESSAGE_DATA *)pm_msg->malloc_pt;
-                
-                Xprintf( &print_mess->buf[0]) ;
+                Xprintf( &pm_msg->buf[0]) ;
+                vPortFree(pm_msg);
                 break;
             case PM_COM_UART_RX:
                 debu_main();
+                
+                //Xprintf("debug main()\r\n");
+                
                 break;
             default:
                 break;
@@ -176,12 +178,11 @@ int getch_buf(USR_UARTx_BUF *buf)
     }
     return (int) rxdata; // 受信データを返す
 }
-PRINT_MSG_FORM  usrPM_msg;
+
 //=============================================================================
 // UART RX interrupt 
 //=============================================================================
 #define _UART_1_VECTOR                           24
-
 #pragma vector ISR_UartRx 24
 #pragma interrupt ISR_UartRx IPL7AUTO
 void ISR_UartRx(void) 
@@ -206,25 +207,16 @@ void ISR_UartRx(void)
     // usrUartRxEventISR();
   
     xHigherPriorityTaskWoken = pdFALSE;
+    usrMsgQueueUART.command = PM_COM_UART_RX;
+    usrMsgQueueUART.ptr = (void *)&usrMsgQueueUART;
     
-    usr_msg_command = PM_COM_UART_RX;
-    usrPM_msg.malloc_pt = (void *)&usr_msg_command;
-    usrPM_msg.command = PM_COM_UART_RX;
+    Status = xQueueSendFromISR(usrMsgQueue, (void *)&usrMsgQueueUART, &xHigherPriorityTaskWoken);
 
-    Yprintf("pre \r\n",0);
-#ifdef ___NOP
-    Status = xQueueSendFromISR(usrMsgQueue, (void *)&usrPM_msg, &xHigherPriorityTaskWoken);
-
-    Yprintf("xQueueSendFromISR = %x\r\n",Status);
     if( xHigherPriorityTaskWoken ) { 
         /* Actual macro used here is port specific. */  
         portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
         //taskYIELD_FROM_ISR (); 
     } 
-    
-#endif
-    
-    Yprintf("after \r\n",0);
     
     UART_RXIF = 0;
     
@@ -292,7 +284,7 @@ const uint32_t usrBaundRate_BRG = ( (usrPERIPHERAL_CLOCK_HZ / usrBAUNRATE ) / 4 
     UART_TXIF   = 0;
 
     // Priority
-    UART_IP     = 7;
+    UART_IP     = configMAX_SYSCALL_INTERRUPT_PRIORITY;
     UART_IS     = 0;
     	
     //	Enable	
@@ -342,7 +334,7 @@ const uint32_t usrBaundRate_BRG = ( (usrPERIPHERAL_CLOCK_HZ / usrBAUNRATE ) / 4 
     UART485_TXIF   = 0;
 
     // Priority
-    UART485_IP     = 7;
+    UART485_IP     = configMAX_SYSCALL_INTERRUPT_PRIORITY;
     UART485_IS     = 0;
     	
     //	Enable	
@@ -676,11 +668,30 @@ void Xprintf(const char *string, ...)
 void Yprintf( uint8_t *string, uint32_t dt )
 {
     uint16_t    i;
-    
+    uint32_t    temp;
+
     while (*string != '\0') {
         if (*string == '%') {
             string++; // Move past '%'
             switch (*string ){
+                case  'd':
+\
+                    temp = dt;
+                    i = 1;
+
+                    while (dt / 10 != 0) {
+                        dt = dt / 10;
+                        i *= 10;
+                    }
+                    dt = temp;    
+
+                    for( ; i>0; i/=10 ){
+                        dt = dt / i;
+                        USR_PUT_CHAR('0' + dt);
+                        dt = temp - (i * dt);
+                        temp = dt;
+                    }
+                    break;
                 case  'x':
                     for(i=28;  i>0; i-=4){
                         USR_PUT_CHAR(ConvC[( dt >> i ) & 0x0f ]);
@@ -744,34 +755,39 @@ void usrMessage_send(char *text,uint8_t *buffer)
 void usrUartRxEventISR(void)
 {   
     BaseType_t      xHigherPriorityTaskWoken;
-    PRINT_MSG_FORM  pm_msg;
     BaseType_t      Status;
   
     xHigherPriorityTaskWoken = pdFALSE;
     
-    usr_msg_command = PM_COM_UART_RX;
-    pm_msg.malloc_pt = (void *)&usr_msg_command;
-    pm_msg.command = PM_COM_UART_RX;
+    usrMsgQueueUART.command = PM_COM_UART_RX;
 
-    Status = xQueueSendFromISR(usrMsgQueue, (void *)&pm_msg, &xHigherPriorityTaskWoken);
+    Status = xQueueSendFromISR(usrMsgQueue, (void *)&usrMsgQueueUART, &xHigherPriorityTaskWoken);
     portEND_SWITCHING_ISR( xHigherPriorityTaskWoken );
     
 }
 
 
+
+USR_MSG_QUEUE   Task01_msgq_ueeue;
+USR_MSG_QUEUE   Task02_msgq_ueeue;
+USR_MSG_QUEUE   ISR_msgq_ueeue;
+
+
+
 //=============================================================================
 //
 //=============================================================================
-void usrMessage_send(uint8_t *msgbuffer, const char *string, ...)
+void usrMessage_send(const char *string, ...)
 {
     va_list         ap;
     uint8_t         *buffer;
-    PRINT_MSG_FORM  pm_msg;
+    USR_MSG_QUEUE   *pm_msg;
     BaseType_t      Status;
     
    if( xSemaphoreTake( usrMessage_sem, portMAX_DELAY  ) == pdTRUE ){
- 
-        buffer = ( uint8_t * ) msgbuffer;
+       pm_msg = ( USR_MSG_QUEUE * ) pvPortMalloc( sizeof( USR_MSG_QUEUE ) );
+       Xprintf("usrMessage_send  pm_msg=%p\r\n",pm_msg);
+        buffer = ( uint8_t * ) &pm_msg->buf[0];
 
         va_start(ap, string);
 
@@ -814,13 +830,23 @@ void usrMessage_send(uint8_t *msgbuffer, const char *string, ...)
         va_end(ap);
 
 
-        pm_msg.malloc_pt = (void *)msgbuffer;
-        pm_msg.command = PM_COM_MESSAGE;
-
-        Status = xQueueSend(usrMsgQueue, (void *)&pm_msg, 0);
+        pm_msg->ptr = pm_msg;
+        pm_msg->command = PM_COM_MESSAGE;
+        
+        Status = xQueueSend(usrMsgQueue, (void *)pm_msg, 0);
         if( Status  != pdPASS ){
             Xprintf( "QSEND ERROR :Statust=%d\r\n", Status);
         }
          xSemaphoreGive( usrMessage_sem );
    }      
 }
+
+void    teset_msg(void)
+{
+    BaseType_t      Status;
+    usrMsgQueueUART.command = PM_COM_UART_RX;
+    usrMsgQueueUART.ptr = (void *)&usrMsgQueueUART;
+    Status = xQueueSend(usrMsgQueue, (void *)&usrMsgQueueUART, 0);
+    
+}
+    
