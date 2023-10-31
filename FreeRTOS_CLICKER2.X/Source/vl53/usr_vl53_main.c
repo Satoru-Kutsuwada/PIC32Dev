@@ -82,7 +82,7 @@ void    teset_msg(void);
 //=============================================================================
 void vTask001(void *pvParameters) 
 {
-    VL53L0X_Error                       Status;
+    VL53L0X_Error                       Status = VL53L0X_ERROR_NONE;;
     VL53L0X_RangingMeasurementData_t    RangingMeasurementData;
     FixPoint1616_t                      LimitCheckCurrent;
     VL53L0X_RangingMeasurementData_t   *pRangingMeasurementData    = &RangingMeasurementData;
@@ -169,7 +169,7 @@ void vTask001(void *pvParameters)
                         
 
                         usrVL53Ctrl.MesurData = pRangingMeasurementData->RangeMilliMeter;
-                        LOG_PRINT_VL53("MesurData: %d\r\n", usrVL53Ctrl.MesurData);
+                        LOG_PRINT_VL53("%2d %3d.%3d MesurData: %d\r\n", usrSRTC.sec, usrSRTC.msec, usrSRTC.usec, usrVL53Ctrl.MesurData);
 
                         /*
                          * <VL53L0X_ClearInterruptMask()>
@@ -386,6 +386,9 @@ VL53L0X_Error WaitMeasurementDataReady(VL53L0X_DEV Dev)
     uint8_t NewDatReady=0;
     uint32_t LoopNb;
 
+    LOG_PRINT_VL53("WaitMeasurementDataReady()\r\n");
+
+    
     // Wait until it finished
     // use timeout to avoid deadlock
     if (Status == VL53L0X_ERROR_NONE) {

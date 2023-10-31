@@ -374,8 +374,8 @@ uint8_t *my_putint(int num, int keta_req, uint8_t *buf)
 
     if( keta_req > 0){
         for(i=0; i< keta_req; i++){
-            //*buf = '0';
-            *buf = ' ';
+            *buf = '0';
+            //*buf = ' ';
             buf++;
         }
     }

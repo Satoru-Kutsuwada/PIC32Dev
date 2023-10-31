@@ -31,9 +31,12 @@
 //=============================================================================
 // external variable
 //=============================================================================
-extern  USR_UARTx_BUF    usrUartxRx;
+extern      USR_UARTx_BUF       usrUartxRx;
 
-extern  USR_VL53_DATA   usrVL53Ctrl;
+extern      USR_VL53_DATA       usrVL53Ctrl;
+extern      USR_RTC_DATA        usrSRTC;
+extern      uint16_t            usrLogSW_I2C;
+extern      uint16_t            usrLogSW_VL53;
 
 //=============================================================================
 // Prototype
@@ -139,11 +142,11 @@ typedef struct{
 
 const MENUE Deb_menue00[] = {
     "\r\nLOG MENUE\r\n",
-    " 1.LOG DISPLAY\r\n",
-    " 2.LOG CLEAR\r\n",
-    " 3.STOP MODE:IMMMEDIATE\r\n",
-    " 4.STOP MODE:MAX_DATA_STOP\r\n",
-    " 5.STOP MODE:NON_STOP\r\n",
+    " 1.I2C LOG ON/OFF\r\n",
+    " 2.VL53 LOG ON/OFF\r\n",
+    " 3.\r\n",
+    " 4.\r\n",
+    " 5.\r\n",
 
     " r.EXIT\r\n"
 };
@@ -306,7 +309,7 @@ void DBmanue_prompt(void)
 
 	switch( input2menu() ){
     case CMD_RTC:
-
+        Xprintf("%2d:%2d:%2d %3d.%3d \r\n", usrSRTC.hour, usrSRTC.min, usrSRTC.sec, usrSRTC.msec, usrSRTC.usec);
         break;
     case CMD_LOG:
         dev_menue_type = DEB_LOG_MENUE;
@@ -409,10 +412,24 @@ void DBmanue_log(void)
 {
 	switch( input_string.main[0] ){
 	case '1':
-		//LogInfo_display();
+		usrLogSW_I2C ^= 1;
+        if( usrLogSW_I2C == 0 ){
+            Xprintf("  I2C LOG OFF\r\n");
+        }
+        else{
+            Xprintf("  I2C LOG ON\r\n");
+        }
+                
 		break;
 	case '2':
-		//LogInfo_clear();
+		usrLogSW_VL53 ^= 1;
+
+        if( usrLogSW_VL53 == 0 ){
+            Xprintf(" VL53 LOG OFF\r\n");
+        }
+        else{
+            Xprintf(" VL53 LOG ON\r\n");
+        }
 		break;
 	case '3':
 		//Set_logflg(LF_NON_STOP);
