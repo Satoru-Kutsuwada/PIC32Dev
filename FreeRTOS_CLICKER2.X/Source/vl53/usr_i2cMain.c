@@ -142,7 +142,7 @@ void i2c_init(void)
     
     
     
-    Xprintf("I2C CON=%p, STAT=%x\r\n",I2C_CON,I2C_STAT);
+    //Xprintf("I2C CON=%p, STAT=%x\r\n",I2C_CON,I2C_STAT);
     
     
     

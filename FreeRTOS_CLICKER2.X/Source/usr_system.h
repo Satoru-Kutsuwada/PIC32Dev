@@ -18,7 +18,8 @@ extern "C" {
 
 #include "xc.h"
 
-    
+#define    USR_MAIN_VER     1    
+#define    USR_SUB_VER      0    
     
 //=============================================================================
 //
@@ -538,7 +539,7 @@ typedef enum{
 
 // PORT
 #define	UART485_RXPORT	TRISFbits.TRISF5
-#define UART485_CTRL    LATBbits.LATB1;    
+#define UART485_CTRL    LATBbits.LATB15    
 
     
 		
@@ -730,6 +731,7 @@ typedef struct{
     RASING_MODE     RasingMode;
     uint16_t        Status;
     uint16_t        StopReq;
+    RASING_MODE     StartRasingMode;
     int             MesurData;
     
 }USR_VL53_DATA;

@@ -15,7 +15,7 @@
 #include "queue.h"
 #include "semphr.h"
 
-uint16_t usrLogSW_VL53 = 1;
+uint16_t usrLogSW_VL53 = 0;
 
 
 //==============================================================================
@@ -93,6 +93,7 @@ void vTask001(void *pvParameters)
     usrVL53Ctrl.Status = 0;
     usrVL53Ctrl.StopReq = 0;
     usrVL53Ctrl.MesurData = -1;
+    usrVL53Ctrl.StartRasingMode = RASING_MODE_NON;
     
     vTaskDelay(100);    
 
@@ -106,6 +107,7 @@ void vTask001(void *pvParameters)
 
     while(1){
         while(usrVL53Ctrl.RasingMode == RASING_MODE_NON) {
+            usrVL53Ctrl.RasingMode = usrVL53Ctrl.StartRasingMode;
             vTaskDelay(100);    
         }
         
@@ -169,7 +171,7 @@ void vTask001(void *pvParameters)
                         
 
                         usrVL53Ctrl.MesurData = pRangingMeasurementData->RangeMilliMeter;
-                        LOG_PRINT_VL53("%2d %3d.%3d MesurData: %d\r\n", usrSRTC.sec, usrSRTC.msec, usrSRTC.usec, usrVL53Ctrl.MesurData);
+                        Xprintf("%2d %3d.%3d MesurData: %d\r\n", usrSRTC.sec, usrSRTC.msec, usrSRTC.usec, usrVL53Ctrl.MesurData);
 
                         /*
                          * <VL53L0X_ClearInterruptMask()>
@@ -247,7 +249,7 @@ void vTask001(void *pvParameters)
                     Status = VL53L0X_PerformSingleRangingMeasurement(&MyDevice, &RangingMeasurementData);
                     
                     usrVL53Ctrl.MesurData = pRangingMeasurementData->RangeMilliMeter;
-                    LOG_PRINT_VL53("MesurData: %d\r\n", usrVL53Ctrl.MesurData);
+                    Xprintf("MesurData: %d\r\n", usrVL53Ctrl.MesurData);
                     
                     print_pal_error(Status,__LINE__);
                     print_range_status(&RangingMeasurementData);

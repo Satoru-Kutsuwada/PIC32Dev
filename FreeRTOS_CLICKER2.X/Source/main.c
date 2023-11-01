@@ -187,15 +187,15 @@ int main( void )
     // UART
     //-----------------------------------------
     usrUART_Init();
-    usrUART485_Init();
+    //usrUART485_Init();
     
     putstring(UART_FOR_DEBUG,"********************\r\n");
     putstring(UART_FOR_DEBUG,"***  UART START  ***\r\n");
     putstring(UART_FOR_DEBUG,"********************\r\n\r\n");
 
-    putstring(UART_FOR_485,"@@@@@@@@@@@@@@@@@@@@\r\n");
-    putstring(UART_FOR_485,"@@@  UART START  @@@\r\n");
-    putstring(UART_FOR_485,"@@@@@@@@@@@@@@@@@@@@\r\n\r\n");
+    //putstring(UART_FOR_485,"@@@@@@@@@@@@@@@@@@@@\r\n");
+    //putstring(UART_FOR_485,"@@@  UART START  @@@\r\n");
+    //putstring(UART_FOR_485,"@@@@@@@@@@@@@@@@@@@@\r\n\r\n");
     
     Xprintf("RCON = 0x%p\r\n",my_RCON);
     usrInitTimer2();
@@ -227,9 +227,9 @@ int main( void )
     //-----------------------------------------
     Status = xTaskCreate(vTask001, "U01", 512 + 10, NULL, 2, NULL);
     Xprintf("xTaskCreate(Task01)=%d\r\n",Status);
-    Status = xTaskCreate(vTask002, "U02", 190 + 10, NULL, 2, NULL);
+    Status = xTaskCreate(vTask002, "U02", 512 + 10, NULL, 2, NULL);
     Xprintf("xTaskCreate(Task02)=%d\r\n",Status);
-    Status = xTaskCreate(vTask003, "U03", 190 + 10, NULL, 3, NULL);
+    Status = xTaskCreate(vTask003, "U03", 256 + 10, NULL, 3, NULL);
     Xprintf("xTaskCreate(Task03)=%d\r\n",Status);
 
     //-----------------------------------------

@@ -32,12 +32,12 @@ USR_UARTx_BUF    usrUartx485Rx;
 
 
 USR_MSG_QUEUE_ISR   usrMsgQueueUART;
-USR_MSG_QUEUE_ISR   usrMsgQueueUART485;
 //=============================================================================
 // external variable
 //=============================================================================
-extern      QueueHandle_t usrMsgQueue;
-extern      SemaphoreHandle_t usrMessage_sem;
+extern      QueueHandle_t       usrMsgQueue;
+extern      QueueHandle_t       usrRs485Queue;
+extern      SemaphoreHandle_t   usrMessage_sem;
 
 
 //=============================================================================
@@ -58,40 +58,43 @@ void Yprintf( uint8_t *string, uint32_t dt );
 void vTask003(void *pvParameters)
 {
     USR_MSG_QUEUE  *pm_msg;
-    USR_MSG_QUEUE  **pm_msg2;
     uint8_t			msgQueBuf[sizeof(void *)];
+    BaseType_t      result; 
 
-    char            temp[]="%p,%p\r\n";
-    UBaseType_t uxNumberOfItems;
-    uint8_t         ch;
     
     Xprintf("vTask003()\r\n");
     vTaskDelay(100);
     while(1) {
                     
-        if(xQueueReceive(usrMsgQueue, msgQueBuf, portMAX_DELAY) == pdPASS ) {
-            pm_msg = (USR_MSG_QUEUE *)msgQueBuf;
-            pm_msg = pm_msg->ptr;
+        result = xQueueReceive(usrMsgQueue, msgQueBuf, portMAX_DELAY);        // portMAX_DELAY
+        
+        switch(result){
+            case pdPASS:
+                pm_msg = (USR_MSG_QUEUE *)msgQueBuf;
+                pm_msg = pm_msg->ptr;
 
-            switch(pm_msg->command){
-            case PM_COM_MESSAGE:
-                Xprintf( &pm_msg->buf[0]) ;
-                vPortFree(pm_msg);
+                switch(pm_msg->command){
+                case PM_COM_MESSAGE:
+                    Xprintf( &pm_msg->buf[0]) ;
+                    vPortFree(pm_msg);
+                    break;
+                case PM_COM_UART_RX:
+                    debu_main();
+
+                    //Xprintf("debug main()\r\n");
+
+                    break;
+                default:
+                    break;
+                }
                 break;
-            case PM_COM_UART_RX:
-                debu_main();
-                
-                //Xprintf("debug main()\r\n");
-                
+            case errQUEUE_EMPTY:
+                Xprintf("Time out xQueueReceive() = %d\r\n",result);
                 break;
             default:
+                Xprintf("Error xQueueReceive() = %d\r\n",result);
                 break;
-            }
         }
-        else{
-            Xprintf("Error vTask003\r\n\0");
-        }
-
     }
 }
 
@@ -188,7 +191,6 @@ int getch_buf(USR_UARTx_BUF *buf)
 void ISR_UartRx(void) 
 {
     BaseType_t      xHigherPriorityTaskWoken;
-    
     BaseType_t      Status;
 
 
@@ -222,29 +224,7 @@ void ISR_UartRx(void)
     
 }
  
-//=============================================================================
-// UART485 RX interrupt 
-//=============================================================================
-#define _UART_3_VECTOR                           31
 
-#pragma vector ISR_Uart485Rx 31
-#pragma interrupt ISR_Uart485Rx IPL7AUTO
-void ISR_Uart485Rx(void) 
-{
-    UART485_RXIF = 0;
-
-    while( UART485_URXDA ){
-        usrUartx485Rx.buf[usrUartx485Rx.wpt] = UART485_RXREG;
-        usrUartx485Rx.wpt ++;
-        if(usrUartx485Rx.wpt > USRTx_RX_BUF ){
-            usrUartx485Rx.wpt = 0;
-        }
-        
-        if(usrUartx485Rx.rpt == usrUartx485Rx.wpt){
-            usrUartx485Rx.status = USR_UARTx_ERR_OVERRUN;
-        }
-    }
-}
 //=============================================================================
 //  UART init
 //=============================================================================
@@ -340,8 +320,9 @@ const uint32_t usrBaundRate_BRG = ( (usrPERIPHERAL_CLOCK_HZ / usrBAUNRATE ) / 4 
     //	Enable	
     UART485_EIE    = 0;
     UART485_RXIE   = 1;
-    UART485_TXIE   = 0;
+    UART485_TXIE   = 1;
 
+    UART485_CTRL = 0;
     
     
 }
@@ -786,7 +767,7 @@ void usrMessage_send(const char *string, ...)
     
    if( xSemaphoreTake( usrMessage_sem, portMAX_DELAY  ) == pdTRUE ){
        pm_msg = ( USR_MSG_QUEUE * ) pvPortMalloc( sizeof( USR_MSG_QUEUE ) );
-       Xprintf("usrMessage_send  pm_msg=%p\r\n",pm_msg);
+       //Xprintf("usrMessage_send  pm_msg=%p\r\n",pm_msg);
         buffer = ( uint8_t * ) &pm_msg->buf[0];
 
         va_start(ap, string);
